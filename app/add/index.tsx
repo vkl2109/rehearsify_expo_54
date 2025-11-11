@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-export default function Add() {
+export default function SongOrList() {
   return (
     <View style={styles.container}>
-      <Text>Tab [Add]</Text>
+      <Text>Tab [SongOrList]</Text>
     </View>
   );
 }
