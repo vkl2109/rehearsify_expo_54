@@ -1,10 +1,14 @@
+import { SplashScreenController } from '@/context';
 import { Stack } from 'expo-router';
 
 
 export default function Root() {
   // Set up the auth context and render your layout inside of it.
   return (
-    <RootNavigator />
+    <>
+        <SplashScreenController />  
+        <RootNavigator />
+    </>
   );
 }
 
