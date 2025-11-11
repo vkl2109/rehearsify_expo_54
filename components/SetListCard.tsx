@@ -1,6 +1,7 @@
 import { SetList } from "@/constants/types";
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-
+import Pill from "./pill";
 
 export default function SetListCard({
     setList
@@ -14,7 +15,11 @@ export default function SetListCard({
                     <Text style={styles.songCount}>{setList.songs.length}</Text>
                     <Text style={styles.cardTxt}>songs</Text>
                 </View>
-                <Text>{setList.name}</Text>
+                <View style={styles.cardContent}>
+                    <Pill w={60} h={18} c='lightgray' text="Feb 12th"/>
+                    <Text>{setList.name}</Text>
+                </View>
+                <AntDesign name="right" size={24} color="lightgray" />
             </TouchableOpacity>
         </View>
     )
@@ -45,6 +50,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
+        paddingRight: 10,
     },
     cardImg: {
         width: 80,
@@ -65,5 +71,13 @@ const styles = StyleSheet.create({
         fontSize: 12,
         textAlign: 'center',
         color: 'gray'
+    },
+    cardContent: {
+        flex: 1,
+        height: '100%',
+        paddingVertical: 10,
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        flexDirection: 'column',
     }
 })
