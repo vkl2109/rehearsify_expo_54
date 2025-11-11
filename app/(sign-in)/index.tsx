@@ -1,10 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native';
+import Button from '@/components/button';
+import { useAuthStore } from '@/context/AuthStore';
+import { StyleSheet, Text } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SignInRoot() {
+  const signIn = useAuthStore(s => s.logInUser);
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text>Tab [Sign In]</Text>
-    </View>
+      <Button onPress={() => signIn('test')}/>
+    </SafeAreaView>
   );
 }
 

@@ -1,4 +1,5 @@
 import { SplashScreenController } from '@/context';
+import { useAuthStore } from '@/context/AuthStore';
 import { Stack } from 'expo-router';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -15,7 +16,7 @@ export default function Root() {
 
 // Create a new component that can access the SessionProvider context later.
 function RootNavigator() {
-    const session = null; // Replace with actual session logic
+    const session = useAuthStore(s => s.UID);
 
     return (
         <Stack screenOptions={{ headerShown: false }}>
