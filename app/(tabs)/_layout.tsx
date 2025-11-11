@@ -1,11 +1,37 @@
-import { Tabs } from 'expo-router';
+import Entypo from '@expo/vector-icons/Entypo';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { TabList, Tabs, TabSlot, TabTrigger } from 'expo-router/ui';
+import { StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default function TabLayout() {
+// Defining the layout of the custom tab navigator
+export default function Layout() {
+  const insets = useSafeAreaInsets();
+
   return (
-    <Tabs screenOptions={{ headerShown: false }}>
-      <Tabs.Screen name="index" options={{ title: 'Home' }} />
-      <Tabs.Screen name="add" options={{ title: 'Plus' }} />
-      <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
+    <Tabs>
+      <TabSlot />
+      <TabList style={{...styles.tabList, paddingBottom: insets.bottom}}>
+        <TabTrigger name="home" href="/">
+          <Entypo name="home" size={24} color="black" />
+        </TabTrigger>
+        <TabTrigger name="add" href="/add">
+          <Entypo name="plus" size={24} color="black" />
+        </TabTrigger>
+        <TabTrigger name="profile" href="/profile">
+          <FontAwesome name="user-circle" size={24} color="black" />
+        </TabTrigger>
+      </TabList>
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  tabList: {
+    width: '100%',
+    height: 60,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+  },
+});
