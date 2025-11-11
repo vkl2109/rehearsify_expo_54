@@ -1,11 +1,26 @@
-import { Tabs } from 'expo-router';
+import { Stack } from 'expo-router';
 
-export default function TabLayout() {
+
+export default function Root() {
+  // Set up the auth context and render your layout inside of it.
   return (
-    <Tabs screenOptions={{ headerShown: false }}>
-      <Tabs.Screen name="index" options={{ title: 'Home' }} />
-      <Tabs.Screen name="add" options={{ title: 'Plus' }} />
-      <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
-    </Tabs>
+    <RootNavigator />
   );
+}
+
+// Create a new component that can access the SessionProvider context later.
+function RootNavigator() {
+    const session = null; // Replace with actual session logic
+
+    return (
+        <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Protected guard={!!session}>
+                <Stack.Screen name="(tabs)" />
+            </Stack.Protected>
+
+            <Stack.Protected guard={!session}>
+                <Stack.Screen name="(sign-in)" />
+            </Stack.Protected>
+        </Stack>
+    );
 }
