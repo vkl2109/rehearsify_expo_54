@@ -1,27 +1,36 @@
-import { StyleSheet, View } from "react-native";
+import { SetList } from "@/constants/types";
+import { StyleSheet, Text, View } from "react-native";
 
 
-export default function SetListCard() {
+export default function SetListCard({
+    setList
+}: {
+    setList: SetList
+}) {
     return(
         <View style={styles.cardWrapper}>
-
+            <View style={styles.card}>
+                <Text>{setList.name}</Text>
+            </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     cardWrapper: {
-        width: '90%',
-        height: 'auto',
+        width: '100%',
+        height: '100%',
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#fff',
+    },
+    card: {
+        width: '90%',
+        height: 100,
+        backgroundColor: 'white',
         borderRadius: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-        marginVertical: 10,
+        margin: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
     }
 })
