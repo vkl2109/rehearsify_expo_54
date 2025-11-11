@@ -1,5 +1,5 @@
 import { SetList } from "@/constants/types";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 
 export default function SetListCard({
@@ -9,9 +9,13 @@ export default function SetListCard({
 }) {
     return(
         <View style={styles.cardWrapper}>
-            <View style={styles.card}>
+            <TouchableOpacity style={styles.card}>
+                <View style={styles.cardImg}>
+                    <Text style={styles.songCount}>{setList.songs.length}</Text>
+                    <Text style={styles.cardTxt}>songs</Text>
+                </View>
                 <Text>{setList.name}</Text>
-            </View>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -28,9 +32,38 @@ const styles = StyleSheet.create({
         width: '90%',
         height: 100,
         backgroundColor: 'white',
-        borderRadius: 10,
+        borderRadius: 5,
+        margin: 5,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    cardImg: {
+        width: 80,
+        height: 80,
+        backgroundColor: 'lightblue',
         margin: 10,
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+        borderRadius: 5,
+    },
+    songCount: {
+        fontSize: 36,
+        textAlign: 'center',
+        color: 'gray',
+    },
+    cardTxt: {
+        fontSize: 12,
+        textAlign: 'center',
+        color: 'gray'
     }
 })
