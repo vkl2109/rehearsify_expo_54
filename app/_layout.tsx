@@ -1,14 +1,15 @@
 import { SplashScreenController } from '@/context';
 import { Stack } from 'expo-router';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 
 export default function Root() {
   // Set up the auth context and render your layout inside of it.
   return (
-    <>
+    <SafeAreaProvider>
         <SplashScreenController />  
         <RootNavigator />
-    </>
+    </SafeAreaProvider>
   );
 }
 
