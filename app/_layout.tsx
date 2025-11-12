@@ -1,6 +1,7 @@
 import { SplashScreenController } from '@/context';
 import { useAuthStore } from '@/context/AuthStore';
 import { Stack } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 
@@ -8,6 +9,7 @@ export default function Root() {
   // Set up the auth context and render your layout inside of it.
   return (
     <SafeAreaProvider>
+        <StatusBar style="light" />
         <SplashScreenController />  
         <RootNavigator />
     </SafeAreaProvider>
