@@ -1,3 +1,4 @@
+import { backgroundColor } from '@/constants/colors';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { TabList, Tabs, TabSlot, TabTrigger } from 'expo-router/ui';
@@ -11,13 +12,16 @@ export default function Layout() {
   return (
     <Tabs>
       <TabSlot />
-      <View style={{...styles.tabList, paddingBottom: insets.bottom}}>
+      <View style={{...styles.tabList, 
+        paddingBottom: insets.bottom,
+        backgroundColor: backgroundColor
+        }}>
         <TabTrigger name="home" href="/">
-          <Entypo name="home" size={24} color="black" />
+          <Entypo name="home" size={24} color="white" />
         </TabTrigger>
-        <Entypo name="plus" size={24} color="black" />
+        <Entypo name="plus" size={24} color="white" />
         <TabTrigger name="profile" href="/profile">
-          <FontAwesome name="user-circle" size={24} color="black" />
+          <FontAwesome name="user-circle" size={24} color="white" />
         </TabTrigger>
       </View>
       <TabList style={{display: 'none'}}>
