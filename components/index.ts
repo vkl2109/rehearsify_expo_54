@@ -1,5 +1,4 @@
-export * from './button';
-export * from './SetListCard';
+export { SetListCard } from './SetListCard';
 
 export const testSetLists = [
     {

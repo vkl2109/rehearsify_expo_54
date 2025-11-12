@@ -1,16 +1,20 @@
 import { SetList } from "@/constants/types";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import Pill from "./pill";
+import Pill from "./common/pill";
 
-export default function SetListCard({
+function SetListCard({
     setList
 }: {
     setList: SetList
 }) {
+    const handleRedirect = () => {
+
+    }
+
     return(
         <View style={styles.cardWrapper}>
-            <TouchableOpacity style={styles.card}>
+            <TouchableOpacity style={styles.card} onPress={handleRedirect}>
                 <View style={styles.cardImg}>
                     <Text style={styles.songCount}>{setList.songs.length}</Text>
                     <Text style={styles.cardTxt}>songs</Text>
@@ -81,3 +85,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
     }
 })
+
+export {
+    SetListCard
+};
