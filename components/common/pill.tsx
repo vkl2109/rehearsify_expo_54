@@ -1,3 +1,4 @@
+import { info } from "@/constants/colors";
 import { DimensionValue, StyleSheet, Text, View, ViewProps } from "react-native";
 
 interface PillProps extends ViewProps {
@@ -11,7 +12,7 @@ interface PillProps extends ViewProps {
 export default function Pill({
     h = 50,
     w = 100,
-    c = 'lightgray',
+    c = info,
     fs = 10,
     text
 }: PillProps) {

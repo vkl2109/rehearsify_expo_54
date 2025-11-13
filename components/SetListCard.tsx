@@ -1,7 +1,9 @@
+import { bg, bgLight, border, highlight, textMuted } from "@/constants/colors";
 import { SetList } from "@/constants/types";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Pill from "./common/pill";
+import Title from "./common/title";
 
 function SetListCard({
     setList
@@ -14,16 +16,34 @@ function SetListCard({
 
     return(
         <View style={styles.cardWrapper}>
-            <TouchableOpacity style={styles.card} onPress={handleRedirect}>
-                <View style={styles.cardImg}>
-                    <Text style={styles.songCount}>{setList.songs.length}</Text>
-                    <Text style={styles.cardTxt}>songs</Text>
+            <TouchableOpacity style={{
+                ...styles.card,
+                backgroundColor: bg
+            }} onPress={handleRedirect}>
+                <View style={{
+                    ...styles.cardImg,
+                    backgroundColor: bgLight
+                    }}>
+                    <Text style={{
+                        ...styles.songCount,
+                        color: textMuted
+                    }}>{setList.songs.length}</Text>
+                    <Text style={{
+                        ...styles.cardTxt,
+                        color: textMuted
+                    }}>songs</Text>
                 </View>
                 <View style={styles.cardContent}>
-                    <Pill w={60} h={18} c='lightgray' text="Feb 12th"/>
-                    <Text>{setList.name}</Text>
+                    <Pill 
+                        w={100}
+                        h={25}
+                        c={border}
+                        text="Feb 12th"
+                        fs={14}
+                        />
+                    <Title w={200} m={5}>{setList.name}</Title>
                 </View>
-                <AntDesign name="right" size={24} color="lightgray" />
+                <AntDesign name="right" size={24} color={highlight} />
             </TouchableOpacity>
         </View>
     )
@@ -40,7 +60,6 @@ const styles = StyleSheet.create({
     card: {
         width: '90%',
         height: 100,
-        backgroundColor: 'white',
         borderRadius: 5,
         margin: 5,
         flexDirection: 'row',
@@ -51,7 +70,6 @@ const styles = StyleSheet.create({
     cardImg: {
         width: 80,
         height: 80,
-        backgroundColor: 'lightblue',
         margin: 10,
         flexDirection: 'column',
         justifyContent: 'center',
