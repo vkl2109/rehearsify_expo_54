@@ -1,3 +1,4 @@
+import { bgDark } from '@/constants/colors';
 import { SplashScreenController } from '@/context';
 import { useAuthStore } from '@/context/AuthStore';
 import { Stack } from 'expo-router';
@@ -21,7 +22,12 @@ function RootNavigator() {
     const session = useAuthStore(s => s.UID);
 
     return (
-        <Stack screenOptions={{ headerShown: false }}>
+        <Stack screenOptions={{ 
+            headerShown: false,
+            contentStyle: {
+                backgroundColor: bgDark
+            }
+            }}>
             <Stack.Protected guard={!!session}>
                 <Stack.Screen name="(tabs)" />
             </Stack.Protected>

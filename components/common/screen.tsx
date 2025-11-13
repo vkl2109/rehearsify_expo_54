@@ -1,4 +1,4 @@
-import { backgroundColor } from "@/constants/colors";
+import { bgDark } from "@/constants/colors";
 import { StyleSheet } from "react-native";
 import { SafeAreaView, SafeAreaViewProps } from "react-native-safe-area-context";
 
@@ -8,7 +8,7 @@ export default function Screen ({ children, ...props }: SafeAreaViewProps) {
         <SafeAreaView 
         {...props}
         style={{...styles.container, 
-            backgroundColor: backgroundColor
+            backgroundColor: bgDark
         }}>
             {children}
         </SafeAreaView>

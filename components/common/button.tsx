@@ -1,3 +1,4 @@
+import { primary, textColor } from '@/constants/colors';
 import { AnimatableNumericValue, DimensionValue, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 
@@ -24,9 +25,12 @@ export default function Button({
             height: h,
             borderRadius: r,
             margin: m,
-            padding: p
+            padding: p,
+            backgroundColor: primary
         }} onPress={onPress}>
-            <Text style={styles.btnTxt}>Press Me</Text>
+            <Text style={{...styles.btnTxt,
+              color: textColor
+            }}>Press Me</Text>
         </TouchableOpacity>
     )
 }
@@ -35,11 +39,9 @@ const styles = StyleSheet.create({
   btnContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'blue',
   },
   btnTxt: {
     margin: 10,
-    color: 'white',
     fontSize: 16,
     fontWeight: '600',
   }
