@@ -1,6 +1,7 @@
 import { bg, bgLight, border, highlight, textMuted } from "@/constants/colors";
 import { SetList } from "@/constants/types";
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { useRouter } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Pill from "./common/pill";
 import Title from "./common/title";
@@ -10,8 +11,9 @@ function SetListCard({
 }: {
     setList: SetList
 }) {
+    const router = useRouter()
     const handleRedirect = () => {
-
+        router.push("/setlist")
     }
 
     return(

@@ -12,8 +12,8 @@ interface TitleProps extends TextProps {
 }
 
 export default function Title({
-    h = 50,
-    w = 100,
+    h = "auto",
+    w = "auto",
     c = textColor,
     fs = 20,
     m = 0,
