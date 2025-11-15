@@ -1,14 +1,15 @@
-import { testSetLists } from '@/components';
+import { SetListCard } from '@/components/cards/SetListCard';
 import Screen from '@/components/common/screen';
-import { SetListCard } from '@/components/SetListCard';
+import { useSetListStore } from '@/context/SetListStore';
 import { FlashList } from "@shopify/flash-list";
 import { StyleSheet } from 'react-native';
 
 export default function Root() {
+  const setLists = useSetListStore(s => s.setLists)
   return (
     <Screen>
       <FlashList
-        data={testSetLists}
+        data={setLists}
         renderItem={({ item }) => <SetListCard setList={item}/>}
         style={styles.allSetLists}
         />

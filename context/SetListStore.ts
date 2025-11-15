@@ -1,3 +1,4 @@
+import { testSetLists } from '@/components'
 import { SetList } from '@/constants/types'
 import { create } from 'zustand'
 
@@ -8,7 +9,7 @@ interface SetListStoreState {
 }
 
 const useSetListStore = create<SetListStoreState>()((set) => ({
-    setLists: [],
+    setLists: testSetLists,
     addSetList: (newSetList: SetList[]) => set({
         setLists: newSetList,
     }),
