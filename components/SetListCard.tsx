@@ -1,5 +1,6 @@
 import { bg, bgLight, border, highlight, textMuted } from "@/constants/colors";
 import { SetList } from "@/constants/types";
+import { currentSetListStore } from "@/context/SetListStore";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useRouter } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -12,7 +13,9 @@ function SetListCard({
     setList: SetList
 }) {
     const router = useRouter()
+    const setCurrentSetList = currentSetListStore(s => s.setCurrentSetList)
     const handleRedirect = () => {
+        setCurrentSetList(setList)
         router.push("/setlist")
     }
 

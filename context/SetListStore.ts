@@ -17,6 +17,23 @@ const useSetListStore = create<SetListStoreState>()((set) => ({
     })
 }))
 
-export {
-    useSetListStore
+interface CurrentSetListState {
+    currentSetList: SetList | undefined,
+    setCurrentSetList: (newData: SetList) => void,
+    removeCurrentSetList: () => void,
 }
+
+const currentSetListStore = create<CurrentSetListState>()((set) => ({
+    currentSetList: undefined,
+    setCurrentSetList: (newSetList: SetList) => set({
+        currentSetList: newSetList
+    }),
+    removeCurrentSetList: () => set({
+        currentSetList: undefined
+    })
+}))
+
+export {
+    currentSetListStore, useSetListStore
+}
+
