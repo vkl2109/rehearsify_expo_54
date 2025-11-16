@@ -4,6 +4,7 @@ import { currentSetListStore } from "@/context/SetListStore";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useRouter } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Avatar from "../common/avatar";
 import Pill from "../common/pill";
 import Title from "../common/title";
 
@@ -46,7 +47,11 @@ function SetListCard({
                         text="Feb 12th"
                         fs={14}
                         />
-                    <Title w={200} m={5}>{setList.name}</Title>
+                    <Title w={200} m={5} b>{setList.name}</Title>
+                    <View style={styles.bottomLine}>
+                        <Avatar name="V" size={20}/>
+                        <Title fs={16}>Vincent</Title>
+                    </View>
                 </View>
                 <AntDesign name="right" size={24} color={highlight} />
             </TouchableOpacity>
@@ -63,7 +68,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     card: {
-        width: '90%',
+        width: '100%',
         height: 100,
         borderRadius: 5,
         margin: 5,
@@ -95,9 +100,16 @@ const styles = StyleSheet.create({
         flex: 1,
         height: '100%',
         paddingVertical: 10,
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
         alignItems: 'flex-start',
         flexDirection: 'column',
+    },
+    bottomLine: {
+        flex: 1,
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        flexDirection: 'row',
+        textAlign: 'center'
     }
 })
 

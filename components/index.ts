@@ -1,5 +1,3 @@
-export { SetListCard } from './cards/SetListCard';
-
 export const testSetLists = [
     {
         name: 'My First Set List',

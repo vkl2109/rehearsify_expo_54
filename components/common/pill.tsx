@@ -5,22 +5,28 @@ interface PillProps extends ViewProps {
     h?: DimensionValue
     w?: DimensionValue
     c?: string
+    m?: DimensionValue
+    p?: DimensionValue
     fs?: number
     text: string,
 }
 
 export default function Pill({
-    h = 50,
-    w = 100,
+    h = 'auto',
+    w = 'auto',
     c = info,
     fs = 10,
+    m = 0,
+    p = 5,
     text
 }: PillProps) {
     return(
         <View style={{...styles.pillWrapper, 
             height: h, 
             width: w, 
-            backgroundColor: c
+            backgroundColor: c,
+            margin: m,
+            padding: p
         }}>
             <Text style={{...styles.pillText,
                 fontSize: fs

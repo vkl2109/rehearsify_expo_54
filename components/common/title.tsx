@@ -9,6 +9,7 @@ interface TitleProps extends TextProps {
     fs?: number
     m?: DimensionValue
     p?: DimensionValue
+    b?: boolean
 }
 
 export default function Title({
@@ -18,6 +19,7 @@ export default function Title({
     fs = 20,
     m = 0,
     p = 0,
+    b = false,
     children,
     style,
     ...props
@@ -31,7 +33,8 @@ export default function Title({
             color: c,
             fontSize: fs,
             margin: m,
-            padding: p
+            padding: p,
+            fontWeight: b ? "bold" : "normal"
             }, 
             style
         ]}>
