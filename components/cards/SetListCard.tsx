@@ -1,9 +1,9 @@
-import { bg, bgLight, border, highlight, textMuted } from "@/constants/colors";
+import { bg, bgLight, border, highlight } from "@/constants/colors";
 import { SetList } from "@/constants/types";
 import { currentSetListStore } from "@/context/SetListStore";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useRouter } from "expo-router";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import Avatar from "../common/avatar";
 import Pill from "../common/pill";
 import Title from "../common/title";
@@ -30,14 +30,8 @@ function SetListCard({
                     ...styles.cardImg,
                     backgroundColor: bgLight
                     }}>
-                    <Text style={{
-                        ...styles.songCount,
-                        color: textMuted
-                    }}>{setList.songs.length}</Text>
-                    <Text style={{
-                        ...styles.cardTxt,
-                        color: textMuted
-                    }}>songs</Text>
+                    <Title fs={36} b>{setList.songs.length}</Title>
+                    <Title fs={12}>songs</Title>
                 </View>
                 <View style={styles.cardContent}>
                     <Pill 
