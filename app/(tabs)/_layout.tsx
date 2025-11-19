@@ -1,7 +1,8 @@
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { TabList, Tabs, TabSlot, TabTrigger } from 'expo-router/ui';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { SheetManager } from 'react-native-actions-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Defining the layout of the custom tab navigator
@@ -18,7 +19,9 @@ export default function Layout() {
         <TabTrigger name="home" href="/">
           <Entypo name="home" size={24} color="white" />
         </TabTrigger>
-        <Entypo name="plus" size={24} color="white" />
+        <TouchableOpacity onPress={() => SheetManager.show('AddSheet')}>
+          <Entypo name="plus" size={24} color="white" />
+        </TouchableOpacity>
         <TabTrigger name="profile" href="/profile">
           <FontAwesome name="user-circle" size={24} color="white" />
         </TabTrigger>

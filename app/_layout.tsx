@@ -13,13 +13,13 @@ export default function Root() {
   // Set up the auth context and render your layout inside of it.
   return (
     <SafeAreaProvider>
-            <SheetProvider>
         <GestureHandlerRootView>
+            <SheetProvider>
                 <StatusBar style="light" />
                 <SplashScreenController />  
                 <RootNavigator />
-        </GestureHandlerRootView>
             </SheetProvider>
+        </GestureHandlerRootView>
     </SafeAreaProvider>
   );
 }

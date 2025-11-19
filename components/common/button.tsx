@@ -1,5 +1,6 @@
-import { primary, textColor } from '@/constants/colors';
-import { AnimatableNumericValue, DimensionValue, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { primary } from '@/constants/colors';
+import { AnimatableNumericValue, DimensionValue, StyleSheet, TouchableOpacity } from 'react-native';
+import Title from './title';
 
 
 interface ButtonProps extends React.ComponentProps<typeof TouchableOpacity> {
@@ -9,6 +10,7 @@ interface ButtonProps extends React.ComponentProps<typeof TouchableOpacity> {
     m?: DimensionValue;
     p?: DimensionValue;
     flex?: number;
+    c?: string;
 }
 
 export default function Button({
@@ -17,7 +19,9 @@ export default function Button({
     r = 20,
     m = 10,
     p = 10,
-    onPress
+    c = primary,
+    onPress,
+    children
 }: ButtonProps) {
     return(
         <TouchableOpacity style={{...styles.btnContainer, 
@@ -26,11 +30,9 @@ export default function Button({
             borderRadius: r,
             margin: m,
             padding: p,
-            backgroundColor: primary
+            backgroundColor: c
         }} onPress={onPress}>
-            <Text style={{...styles.btnTxt,
-              color: textColor
-            }}>Press Me</Text>
+            <Title m={10} b>{children}</Title>
         </TouchableOpacity>
     )
 }

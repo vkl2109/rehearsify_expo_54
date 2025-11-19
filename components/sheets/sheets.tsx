@@ -1,6 +1,8 @@
 import { registerSheet, SheetDefinition } from 'react-native-actions-sheet';
+import AddSheet from './addSheet';
 import FilterSheet from './filterSheet';
- 
+
+registerSheet('AddSheet', AddSheet);
 registerSheet('FilterSheet', FilterSheet);
  
 // We extend some of the types here to give us great intellisense
@@ -8,5 +10,6 @@ registerSheet('FilterSheet', FilterSheet);
 declare module 'react-native-actions-sheet' {
   interface Sheets {
     'FilterSheet': SheetDefinition;
+    'AddSheet': SheetDefinition;
   }
 }
