@@ -1,4 +1,4 @@
-import { bg, bgLight, border, highlight } from "@/constants/colors";
+import { bg, bgLight, border, highlight, textMuted } from "@/constants/colors";
 import { SetList } from "@/constants/types";
 import { currentSetListStore } from "@/context/SetListStore";
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -44,7 +44,7 @@ function SetListCard({
                     <Title w={200} m={5} b>{setList.name}</Title>
                     <View style={styles.bottomLine}>
                         <Avatar name="V" size={20}/>
-                        <Title fs={16}>Vincent</Title>
+                        <Title fs={16} c={textMuted}>Vincent</Title>
                     </View>
                 </View>
                 <AntDesign name="right" size={24} color={highlight} />

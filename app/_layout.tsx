@@ -3,16 +3,23 @@ import { SplashScreenController } from '@/context';
 import { useAuthStore } from '@/context/AuthStore';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { SheetProvider } from 'react-native-actions-sheet';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import '../components/sheets/sheets.tsx';
 
 
 export default function Root() {
   // Set up the auth context and render your layout inside of it.
   return (
     <SafeAreaProvider>
-        <StatusBar style="light" />
-        <SplashScreenController />  
-        <RootNavigator />
+            <SheetProvider>
+        <GestureHandlerRootView>
+                <StatusBar style="light" />
+                <SplashScreenController />  
+                <RootNavigator />
+        </GestureHandlerRootView>
+            </SheetProvider>
     </SafeAreaProvider>
   );
 }
