@@ -1,13 +1,12 @@
 import Button from '@/components/common/button';
 import Screen from '@/components/common/screen';
-import { useAuthStore } from '@/context/AuthStore';
 import { StyleSheet } from 'react-native';
+import { SheetManager } from 'react-native-actions-sheet';
 
 export default function SignInRoot() {
-  const signIn = useAuthStore(s => s.logInUser);
   return (
     <Screen>
-      <Button onPress={() => signIn('test')}>Press Me</Button>
+      <Button onPress={() => SheetManager.show('AuthSheet')}>Press Me</Button>
     </Screen>
   );
 }

@@ -6,7 +6,7 @@ interface TitleProps extends TextProps {
     h?: DimensionValue
     w?: DimensionValue
     c?: string
-    fs?: number
+    fs?: TextStyle["fontSize"]
     m?: DimensionValue
     p?: DimensionValue
     b?: boolean

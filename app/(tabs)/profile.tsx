@@ -1,9 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native';
+import Button from '@/components/common/button';
+import { useAuthStore } from '@/context/AuthStore';
+import { StyleSheet, View } from 'react-native';
 
 export default function Profile() {
+  const signOut = useAuthStore(s => s.logOutUser);
+
+  const handleSignOut = () => {
+    signOut()
+  }
   return (
     <View style={styles.container}>
-      <Text>Tab [Profile]</Text>
+      <Button onPress={handleSignOut}>Sign Out</Button>
     </View>
   );
 }

@@ -1,5 +1,5 @@
 import { primary } from '@/constants/colors';
-import { AnimatableNumericValue, DimensionValue, StyleSheet, TouchableOpacity } from 'react-native';
+import { AnimatableNumericValue, DimensionValue, StyleSheet, TextStyle, TouchableOpacity } from 'react-native';
 import Title from './title';
 
 
@@ -11,7 +11,7 @@ interface ButtonProps extends React.ComponentProps<typeof TouchableOpacity> {
     p?: DimensionValue;
     flex?: number;
     c?: string;
-    fs?: DimensionValue;
+    fs?: TextStyle["fontSize"];
 }
 
 export default function Button({
