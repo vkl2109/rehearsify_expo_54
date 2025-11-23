@@ -24,8 +24,9 @@ export default function Root() {
         <Input
           icon={<FontAwesome name="search" size={24} color={border} />}
           placeholder="search"
-          search={search}
-          setSearch={setSearch}
+          input={search}
+          setInput={setSearch}
+          w="80%"
           />
         <TouchableOpacity style={styles.filterButton} onPress={() => SheetManager.show('FilterSheet')}>
           <Ionicons name="filter" size={24} color={border} />
@@ -52,6 +53,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
+    paddingRight: 10,
   },
   searchBarWrapper: {
     margin: 10,

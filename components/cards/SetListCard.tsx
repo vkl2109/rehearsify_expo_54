@@ -22,14 +22,11 @@ function SetListCard({
 
     return(
         <View style={styles.cardWrapper}>
-            <TouchableOpacity style={{
-                ...styles.card,
-                backgroundColor: bg
-            }} onPress={handleRedirect}>
-                <View style={{
-                    ...styles.cardImg,
-                    backgroundColor: bgLight
-                    }}>
+            <TouchableOpacity 
+                style={styles.card} 
+                onPress={handleRedirect}
+                >
+                <View style={styles.cardImg}>
                     <Title fs={36} b>{setList.songs.length}</Title>
                     <Title fs={12}>songs</Title>
                 </View>
@@ -70,6 +67,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingRight: 10,
+        backgroundColor: bg
     },
     cardImg: {
         width: 80,
@@ -79,6 +77,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 5,
+        backgroundColor: bgLight
     },
     songCount: {
         fontSize: 36,

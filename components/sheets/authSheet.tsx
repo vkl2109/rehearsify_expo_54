@@ -1,21 +1,29 @@
 import { bgDark, bgLight, border, borderMuted, textMuted } from '@/constants/colors';
 import { useAuthStore } from '@/context/AuthStore';
-import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import Fontisto from '@expo/vector-icons/Fontisto';
+import { useState } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppleIcon } from '../common/AppleIcon';
 import Button from '../common/button';
 import Divider from '../common/Divider';
 import { GoogleIcon } from '../common/GoogleIcon';
+import Input from '../common/Input';
 import Title from '../common/title';
 
 function AuthSheet() {
     const insets = useSafeAreaInsets();
     const signIn = useAuthStore((state) => state.logInUser);
+    const [ email, setEmail ] = useState('');
 
-    const handleSignIn = () => {
-      signIn('test')
-      SheetManager.hide('authSheet');
+    const handleSignIn = async () => {
+      try {
+        await SheetManager.hide('AuthSheet');
+        signIn('test');
+      } catch (e) {
+        console.log(e)
+      }
     }
 
     const handleGoogleAuth = () => {
@@ -31,8 +39,15 @@ function AuthSheet() {
             >
             <View style={styles.sheet}>
                 <View style={styles.inputGroup}>
-                  <TextInput
-                    style={styles.emailInput}
+                  <Input
+                    icon={<Fontisto name="email" size={20} color={"white"} />}
+                    placeholder="email"
+                    input={email}
+                    setInput={setEmail}
+                    w={"90%"}
+                    bg={border}
+                    c={borderMuted}
+                    h={50}
                     />
                   <Button w={"90%"} h={45} onPress={handleSignIn}>Sign In</Button>
                 </View>
@@ -110,6 +125,7 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: 'column',
   },
   emailInput: {
     height: 50,
