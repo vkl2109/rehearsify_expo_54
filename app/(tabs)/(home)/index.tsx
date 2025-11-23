@@ -1,20 +1,19 @@
 import { SetListCard } from '@/components/cards/SetListCard';
+import Input from '@/components/common/Input';
 import Screen from '@/components/common/screen';
 import Title from '@/components/common/title';
-import { bgLight, border, textColor } from '@/constants/colors';
+import { bgLight, border } from '@/constants/colors';
 import { useSetListStore } from '@/context/SetListStore';
-import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FlashList } from "@shopify/flash-list";
 import { useState } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 
 export default function Root() {
   const [ search, setSearch ] = useState('');
   const setLists = useSetListStore(s => s.setLists)
-  const [ isFocused, setIsFocused ] = useState(false);
 
   const filteredSetlists = search != '' ? setLists.filter(sl => 
     sl.name.toLowerCase().includes(search.toLowerCase())
@@ -22,23 +21,12 @@ export default function Root() {
   return (
     <Screen>
       <View style={styles.header}>
-        <View style={[styles.searchBarWrapper, isFocused && styles.focusedBar]}>
-          <FontAwesome name="search" size={24} color={border} />
-          <TextInput 
-            placeholder="search"
-            onChangeText={newText => setSearch(newText)}
-            defaultValue={search}
-            placeholderTextColor={border}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            style={[styles.searchBar, {
-              color: textColor,
-            }]}
-            />
-            {search != '' && <TouchableOpacity onPress={() => setSearch('')}>
-              <Entypo name="cross" size={24} color={border} />
-            </TouchableOpacity>}
-        </View>
+        <Input
+          icon={<FontAwesome name="search" size={24} color={border} />}
+          placeholder="search"
+          search={search}
+          setSearch={setSearch}
+          />
         <TouchableOpacity style={styles.filterButton} onPress={() => SheetManager.show('FilterSheet')}>
           <Ionicons name="filter" size={24} color={border} />
         </TouchableOpacity>
