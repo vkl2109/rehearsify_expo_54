@@ -1,33 +1,37 @@
-import { bgDark, bgLight, border, borderMuted, textMuted } from '@/constants/colors';
+import { bgDark, bgLight, border, borderMuted, textColor, textMuted } from '@/constants/colors';
 import { useAuthStore } from '@/context/AuthStore';
+import { auth } from '@/firebase';
+import Entypo from '@expo/vector-icons/Entypo';
 import Fontisto from '@expo/vector-icons/Fontisto';
+import { FirebaseError } from 'firebase/app';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { AppleIcon } from '../common/AppleIcon';
 import Button from '../common/button';
-import Divider from '../common/Divider';
-import { GoogleIcon } from '../common/GoogleIcon';
 import Input from '../common/Input';
-import Title from '../common/title';
 
 function AuthSheet() {
     const insets = useSafeAreaInsets();
     const signIn = useAuthStore((state) => state.logInUser);
     const [ email, setEmail ] = useState('');
+    const [ password, setPassword ] = useState('');
 
     const handleSignIn = async () => {
       try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password)
+        const user = userCredential.user;
         await SheetManager.hide('AuthSheet');
-        signIn('test');
-      } catch (e) {
-        console.log(e)
+        signIn(user.uid);
+      } catch (error) {
+        const e = error as FirebaseError;
+        const errorCode = e?.code;
+        const errorMessage = e?.message;
+        console.log(errorCode)
+        console.log(errorMessage)
+        alert(errorMessage)
       }
-    }
-
-    const handleGoogleAuth = () => {
-      
     }
 
     return (
@@ -40,18 +44,34 @@ function AuthSheet() {
             <View style={styles.sheet}>
                 <View style={styles.inputGroup}>
                   <Input
-                    icon={<Fontisto name="email" size={20} color={"white"} />}
+                    icon={<Fontisto name="email" size={20} color={textMuted} />}
                     placeholder="email"
                     input={email}
                     setInput={setEmail}
+                    variant="email"
                     w={"90%"}
                     bg={border}
-                    c={borderMuted}
-                    h={50}
+                    c={textColor}
+                    pc={textMuted}
+                    h={45}
+                    fs={20}
                     />
-                  <Button w={"90%"} h={45} onPress={handleSignIn}>Sign In</Button>
+                  <Input
+                    icon={<Entypo name="lock" size={20} color={textMuted} />}
+                    placeholder="password"
+                    input={password}
+                    setInput={setPassword}
+                    variant="password"
+                    w={"90%"}
+                    bg={border}
+                    c={textColor}
+                    pc={textMuted}
+                    h={45}
+                    fs={20}
+                    />
+                  <Button w={"90%"} h={45} r={100} onPress={handleSignIn}>Sign In</Button>
                 </View>
-                <Divider w="90%">or</Divider>
+                {/* <Divider w="90%">or</Divider>
                 <View style={styles.buttonGroup}>
                     <TouchableOpacity
                         style={styles.googleBtn}
@@ -68,7 +88,7 @@ function AuthSheet() {
                         <AppleIcon size={24} color={textMuted} />
                         <Title fs={18}>Apple</Title>
                     </TouchableOpacity>
-                </View>
+                </View> */}
             </View>
         </ActionSheet>
     );
@@ -93,11 +113,10 @@ const styles = StyleSheet.create({
   googleBtn: {
     backgroundColor: textMuted,
     padding: 10,
-    paddingHorizontal: 15,
     borderRadius: 100,
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     flexDirection: 'row',
     borderColor: border,
     borderWidth: 2
@@ -112,11 +131,10 @@ const styles = StyleSheet.create({
   appleBtn: {
     backgroundColor: bgDark,
     padding: 10,
-    paddingHorizontal: 15,
     borderRadius: 100,
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     flexDirection: 'row',
     borderColor: borderMuted,
     borderWidth: 2

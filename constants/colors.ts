@@ -2,7 +2,7 @@ const bgDark = "hsl(228 79% 2%)";
 const bg = "hsl(222 55% 5%)";
 const bgLight = "hsl(220 35% 10%)";
 const textColor = "hsl(220 100% 98%)";
-const textMuted = "hsl(220 100% 98%)";
+const textMuted = "hsl(220 35% 73%)";
 const highlight = "hsl(220 20% 42%)";
 const border = "hsl(220 26% 31%)";
 const borderMuted = "hsl(220 37% 20%)";
@@ -19,4 +19,3 @@ export {
     secondary, success, textColor,
     textMuted, warning
 };
-

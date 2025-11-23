@@ -1,4 +1,4 @@
-import { primary, textMuted } from "@/constants/colors"
+import { primary, textColor } from "@/constants/colors"
 import { DimensionValue, StyleSheet, View } from "react-native"
 import Title from "./title"
 
@@ -6,7 +6,7 @@ import Title from "./title"
 export default function Avatar({
     name,
     bg = primary,
-    c = textMuted,
+    c = textColor,
     size = 25,
     m = 5,
     p = 0
