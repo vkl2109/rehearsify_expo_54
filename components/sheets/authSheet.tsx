@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppleIcon } from '../common/AppleIcon';
+import Divider from '../common/Divider';
 import { GoogleIcon } from '../common/GoogleIcon';
 import Title from '../common/title';
 
@@ -14,13 +15,14 @@ function AuthSheet() {
     }
 
     return (
-        <ActionSheet 
+        <ActionSheet
             containerStyle={styles.container}
             indicatorStyle={styles.indicatorStyle}
             safeAreaInsets={insets}
             gestureEnabled
             >
             <View style={styles.sheet}>
+                <Divider w="90%">or</Divider>
                 <View style={styles.buttonGroup}>
                     <TouchableOpacity
                         style={styles.googleBtn}
