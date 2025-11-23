@@ -11,6 +11,7 @@ interface ButtonProps extends React.ComponentProps<typeof TouchableOpacity> {
     p?: DimensionValue;
     flex?: number;
     c?: string;
+    fs?: DimensionValue;
 }
 
 export default function Button({
@@ -20,6 +21,7 @@ export default function Button({
     m = 10,
     p = 10,
     c = primary,
+    fs = 16,
     onPress,
     children
 }: ButtonProps) {
@@ -32,7 +34,7 @@ export default function Button({
             padding: p,
             backgroundColor: c
         }} onPress={onPress}>
-            <Title m={10} b>{children}</Title>
+            <Title fs={fs} b >{children}</Title>
         </TouchableOpacity>
     )
 }

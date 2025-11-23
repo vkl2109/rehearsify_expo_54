@@ -7,7 +7,7 @@ export default function SignInRoot() {
   const signIn = useAuthStore(s => s.logInUser);
   return (
     <Screen>
-      <Button onPress={() => signIn('test')}/>
+      <Button onPress={() => signIn('test')}>Press Me</Button>
     </Screen>
   );
 }

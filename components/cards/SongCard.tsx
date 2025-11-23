@@ -1,6 +1,6 @@
-import { bg, bgLight, border, textMuted } from "@/constants/colors";
+import { bg, bgLight, border, highlight } from "@/constants/colors";
 import { Song } from "@/constants/types";
-import Entypo from '@expo/vector-icons/Entypo';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import Pill from "../common/pill";
 import Title from "../common/title";
@@ -26,14 +26,14 @@ export default function SongCard({
                     <Pill
                         fs={14}
                         c={border}
-                        w={75}
+                        w={50}
                         text={song.artist}
                         />
-                    <Title>{song.title}</Title>
+                    <Title fs={18}>{song.title}</Title>
                 </View>
                 <View style={styles.rightColumn}>
                     <TouchableOpacity>
-                        <Entypo name="dots-three-horizontal" size={24} color={textMuted} />
+                        <AntDesign name="down" size={24} color={highlight} />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     },
     card: {
         width: '100%',
-        height: 100,
+        height: 75,
         borderRadius: 5,
         margin: 5,
         flexDirection: 'row',
@@ -58,8 +58,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     cardImg: {
-        width: 80,
-        height: 80,
+        width: 50,
+        height: 50,
         margin: 10,
         flexDirection: 'column',
         justifyContent: 'center',
@@ -81,6 +81,6 @@ const styles = StyleSheet.create({
         paddingRight: 15,
         flexDirection: 'column',
         alignItems: 'flex-end',
-        justifyContent: 'flex-start'
+        justifyContent: 'center'
     }
 })

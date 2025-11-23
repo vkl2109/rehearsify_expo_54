@@ -1,5 +1,5 @@
 import { textColor } from "@/constants/colors";
-import { DimensionValue, Text, TextProps } from "react-native";
+import { DimensionValue, Text, TextProps, TextStyle } from "react-native";
 
 
 interface TitleProps extends TextProps {
@@ -10,6 +10,7 @@ interface TitleProps extends TextProps {
     m?: DimensionValue
     p?: DimensionValue
     b?: boolean
+    fw?: TextStyle["fontWeight"]
 }
 
 export default function Title({
@@ -20,6 +21,7 @@ export default function Title({
     m = 0,
     p = 0,
     b = false,
+    fw,
     children,
     style,
     ...props
@@ -34,7 +36,7 @@ export default function Title({
             fontSize: fs,
             margin: m,
             padding: p,
-            fontWeight: b ? "bold" : "normal"
+            fontWeight: b ? "bold" : (fw ?? "normal")
             }, 
             style
         ]}>
