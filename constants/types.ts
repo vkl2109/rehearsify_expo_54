@@ -1,3 +1,4 @@
+import { Timestamp } from "firebase/firestore";
 
 
 interface SetList {
@@ -19,7 +20,31 @@ interface Song {
     bandId: string,
 }
 
+interface User {
+    uid: string,
+    email: string,
+    firstName: string,
+    lastName: string,
+    bandIds: string[],
+    instruments: string[]
+}
+
+interface Band {
+    createdAt: Timestamp,
+    createdBy: string,
+    name: string,
+    genre: string,
+    lastUpdatedBy: string,
+    lastUpdatedAt: Timestamp,
+}
+
+interface BandMember extends User {
+    role: string,
+}
+
 export {
-    SetList,
-    Song
+    Band, BandMember, SetList,
+    Song,
+    User
 };
+
