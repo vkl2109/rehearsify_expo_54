@@ -22,10 +22,10 @@ interface Song {
 
 interface User {
     uid: string,
-    email: string,
-    firstName: string,
-    lastName: string,
-    bandIds: string[],
+    email: string | null,
+    firstName: string | null,
+    lastName: string | null,
+    currentBandId: string | null,
     instruments: string[]
 }
 
@@ -36,6 +36,7 @@ interface Band {
     genre: string,
     lastUpdatedBy: string,
     lastUpdatedAt: Timestamp,
+    id: string
 }
 
 interface BandMember extends User {

@@ -1,11 +1,13 @@
 import Button from '@/components/common/button';
 import { useAuthStore } from '@/context/AuthStore';
+import { auth } from '@/firebase';
 import { StyleSheet, View } from 'react-native';
 
 export default function Profile() {
   const signOut = useAuthStore(s => s.logOutUser);
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
+    await auth.signOut()
     signOut()
   }
   return (

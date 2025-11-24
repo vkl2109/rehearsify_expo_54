@@ -5,6 +5,7 @@ interface authState {
     UID: string,
     user: User | null,
     logInUser: (newData: string) => void,
+    updateUser: (newUser: User) => void,
     logOutUser: () => void,
 }
 

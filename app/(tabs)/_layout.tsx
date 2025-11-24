@@ -1,29 +1,36 @@
+import { TabButton } from '@/components/common/TabButton';
+import { primary, textColor } from '@/constants/colors';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { TabList, Tabs, TabSlot, TabTrigger } from 'expo-router/ui';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Defining the layout of the custom tab navigator
 export default function Layout() {
-  const insets = useSafeAreaInsets();
 
   return (
     <Tabs>
       <TabSlot />
       <View style={{...styles.tabList, 
-        paddingBottom: insets.bottom,
         backgroundColor: "transparent"
         }}>
-        <TabTrigger name="home" href="/">
-          <Entypo name="home" size={24} color="white" />
+        <TabTrigger name="home" href="/" asChild style={{flex: 1}}>
+          <TabButton
+            icon={<Entypo name="home" size={24} color={textColor} />}
+            />
         </TabTrigger>
-        <TouchableOpacity onPress={() => SheetManager.show('AddSheet')}>
-          <Entypo name="plus" size={24} color="white" />
+        <View />
+        <TouchableOpacity 
+          onPress={() => SheetManager.show('AddSheet')}
+          style={styles.plusBtn}
+          >
+          <Entypo name="plus" size={36} color={textColor} />
         </TouchableOpacity>
-        <TabTrigger name="profile" href="/profile">
-          <FontAwesome name="user-circle" size={24} color="white" />
+        <TabTrigger name="profile" href="/profile" asChild style={{flex: 1}}>
+          <TabButton
+            icon={<FontAwesome name="user-circle" size={24} color={textColor} />}
+            />
         </TabTrigger>
       </View>
       <TabList style={{display: 'none'}}>
@@ -46,4 +53,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
   },
+  plusBtn: {
+    backgroundColor: primary,
+    borderRadius: 100,
+    position: 'absolute',
+    top: -25,
+    zIndex: 10,
+    height: 60,
+    width: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: textColor,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  }
 });
