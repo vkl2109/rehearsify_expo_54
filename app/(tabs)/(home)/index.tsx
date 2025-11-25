@@ -1,29 +1,33 @@
-import { testSetLists } from '@/components';
 import { SetListCard } from '@/components/cards/SetListCard';
 import Input from '@/components/common/Input';
 import Screen from '@/components/common/screen';
 import Title from '@/components/common/title';
 import { bgLight, border } from '@/constants/colors';
+import { useAuthStore } from '@/context/AuthStore';
+import { useSetListStore } from '@/context/SetListStore';
+import { fetchSetListsForBand } from '@/utils/queries';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FlashList } from "@shopify/flash-list";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 
 export default function Root() {
   const [ search, setSearch ] = useState('');
-  // const { user } = useAuthStore()
-  // const { setLists, addSetLists } = useSetListStore()
+  const user  = useAuthStore(s => s.user)
+  const setLists = useSetListStore(s => s.setLists)
+  const addSetLists = useSetListStore(s => s.addSetLists)
 
-  // useEffect(() => {
-  //   const bandId = user?.currentBandId;
-  //   if (!bandId) return;
-  // },[user])
+  useEffect(() => {
+    const bandId = user?.currentBandId;
+    if (!bandId) return;
+    if (setLists.length === 0) fetchSetListsForBand(bandId).then(addSetLists)
+  },[user])
 
-  // const filteredSetlists = search != '' ? setLists.filter(sl => 
-  //   sl.name.toLowerCase().includes(search.toLowerCase())
-  // ) : setLists;
+  const filteredSetlists = search != '' ? setLists.filter(sl => 
+    sl.name.toLowerCase().includes(search.toLowerCase())
+  ) : setLists;
   return (
     <Screen>
       <View style={styles.header}>
@@ -39,7 +43,7 @@ export default function Root() {
         </TouchableOpacity>
       </View>
       <FlashList
-        data={testSetLists}
+        data={filteredSetlists}
         ListHeaderComponent={<Title m={10}>My Set Lists</Title>}
         ListHeaderComponentStyle={styles.header}
         renderItem={({ item }) => <SetListCard setList={item}/>}

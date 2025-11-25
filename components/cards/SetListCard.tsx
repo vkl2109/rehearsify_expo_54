@@ -1,6 +1,7 @@
 import { bgLight, border, borderMuted, highlight, textMuted } from "@/constants/colors";
 import { SetList } from "@/constants/types";
 import { currentSetListStore } from "@/context/SetListStore";
+import { formatJsDateToHHmmMMdd } from "@/utils/datetime";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useRouter } from "expo-router";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
@@ -35,8 +36,7 @@ function SetListCard({
                         w={100}
                         h={25}
                         c={border}
-                        // text={formatJsDateToHHmmMMdd(setList.createdAt.toDate())}
-                        text=""
+                        text={formatJsDateToHHmmMMdd(setList?.createdAt?.toDate())}
                         fs={12}
                         />
                     <Title w={200} m={5} b>{setList?.name}</Title>
@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        paddingHorizontal: 10,
     },
     card: {
         width: '100%',

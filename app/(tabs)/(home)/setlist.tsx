@@ -10,7 +10,8 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 export default function SetListView() {
     const router = useRouter()
-    const { currentSetList, removeCurrentSetList } = currentSetListStore()
+    const currentSetList = currentSetListStore(s => s.currentSetList)
+    const removeCurrentSetList = currentSetListStore(s => s.removeCurrentSetList)
 
     const handleBack = () => {
         removeCurrentSetList()
