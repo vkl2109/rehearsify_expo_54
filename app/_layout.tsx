@@ -16,7 +16,9 @@ import '../components/sheets/sheets.tsx';
 SplashScreen.preventAutoHideAsync();
 
 export default function Root() {
-  const { logInUser, logOutUser, updateUser } = useAuthStore();
+  const logInUser = useAuthStore(s => s.logInUser);
+  const logOutUser = useAuthStore(s => s.logOutUser);
+  const updateUser = useAuthStore(s => s.updateUser);
   const setBand = useBandStore(s => s.setBand);
   const [loading, setLoading] = useState(true);
 

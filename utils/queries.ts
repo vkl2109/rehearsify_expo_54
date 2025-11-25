@@ -1,6 +1,6 @@
-import { SetList } from "@/constants/types";
+import { SetList, User } from "@/constants/types";
 import { db } from "@/firebase";
-import { collection, getDocs, query, Timestamp, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, Timestamp, where } from "firebase/firestore";
 
 
 async function fetchSetListsForBand(bandId: string): Promise<SetList[]> {
@@ -28,6 +28,32 @@ async function fetchSetListsForBand(bandId: string): Promise<SetList[]> {
     }
 }
 
+async function getUser(userId: string): Promise<User | null> {
+    try {
+        const userRef = doc(db, "users", userId);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+            const userData = userSnap.data();
+            const serializedUser: User = {
+                uid: userId,
+                email: userData?.email ?? "",
+                firstName: userData?.firstName ?? "",
+                lastName: userData?.lastName ?? "",
+                currentBandId: userData?.currentBandId ?? "",
+                instruments: userData?.instruments || [],
+            }
+            return serializedUser;
+        } else {
+            console.log("No such user!");
+            return null;
+        }
+    } catch (e) {
+        console.warn("Failed to fetch user", e);
+        return null;
+    }
+}
+
 export {
-    fetchSetListsForBand
+    fetchSetListsForBand,
+    getUser
 };

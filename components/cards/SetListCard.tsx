@@ -1,9 +1,12 @@
 import { bgLight, border, borderMuted, highlight, textMuted } from "@/constants/colors";
 import { SetList } from "@/constants/types";
 import { currentSetListStore } from "@/context/SetListStore";
+import { useUserStore } from "@/context/UserStore";
 import { formatJsDateToHHmmMMdd } from "@/utils/datetime";
+import { getUser } from "@/utils/queries";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useRouter } from "expo-router";
+import { useEffect } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import Avatar from "../common/avatar";
 import Pill from "../common/pill";
@@ -20,6 +23,20 @@ function SetListCard({
         setCurrentSetList(setList)
         router.push("/setlist")
     }
+
+    const createdBy = setList?.createdBy ?? ""
+
+    const getUserById = useUserStore(s => s.getUserById)
+    const setUser = useUserStore(s => s.setUser)
+    const createdByUser = getUserById(createdBy)
+
+    useEffect(() => {
+        if (!createdByUser) {
+            getUser(createdBy).then((u) => {
+                if (u) setUser(u)
+        })
+        }
+    },[createdByUser, createdBy])
 
     return(
         <View style={styles.cardWrapper}>
@@ -42,7 +59,7 @@ function SetListCard({
                     <Title w={200} m={5} b>{setList?.name}</Title>
                     <View style={styles.bottomLine}>
                         <Avatar name="V" size={20}/>
-                        <Title fs={16} c={textMuted}>{}</Title>
+                        <Title fs={16} c={textMuted}>{createdByUser?.firstName ?? ""}</Title>
                     </View>
                 </View>
                 <AntDesign name="right" size={24} color={highlight} />
