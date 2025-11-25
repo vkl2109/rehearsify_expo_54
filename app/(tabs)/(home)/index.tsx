@@ -1,31 +1,29 @@
+import { testSetLists } from '@/components';
 import { SetListCard } from '@/components/cards/SetListCard';
 import Input from '@/components/common/Input';
 import Screen from '@/components/common/screen';
 import Title from '@/components/common/title';
 import { bgLight, border } from '@/constants/colors';
-import { useAuthStore } from '@/context/AuthStore';
-import { useSetListStore } from '@/context/SetListStore';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FlashList } from "@shopify/flash-list";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 
 export default function Root() {
   const [ search, setSearch ] = useState('');
-  const { user } = useAuthStore()
-  const { setLists, addSetLists } = useSetListStore()
+  // const { user } = useAuthStore()
+  // const { setLists, addSetLists } = useSetListStore()
 
-  useEffect(() => {
-    const bandId = user?.currentBandId;
-    if (!bandId) return;
-    addSetLists(bandId)
-  },[user])
+  // useEffect(() => {
+  //   const bandId = user?.currentBandId;
+  //   if (!bandId) return;
+  // },[user])
 
-  const filteredSetlists = search != '' ? setLists.filter(sl => 
-    sl.name.toLowerCase().includes(search.toLowerCase())
-  ) : setLists;
+  // const filteredSetlists = search != '' ? setLists.filter(sl => 
+  //   sl.name.toLowerCase().includes(search.toLowerCase())
+  // ) : setLists;
   return (
     <Screen>
       <View style={styles.header}>
@@ -41,7 +39,7 @@ export default function Root() {
         </TouchableOpacity>
       </View>
       <FlashList
-        data={filteredSetlists}
+        data={testSetLists}
         ListHeaderComponent={<Title m={10}>My Set Lists</Title>}
         ListHeaderComponentStyle={styles.header}
         renderItem={({ item }) => <SetListCard setList={item}/>}

@@ -17,7 +17,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function Root() {
   const { logInUser, logOutUser, updateUser } = useAuthStore();
-  const { setBand } = useBandStore()
+  const setBand = useBandStore(s => s.setBand);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

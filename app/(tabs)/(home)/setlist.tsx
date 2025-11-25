@@ -1,13 +1,9 @@
-import SongCard from "@/components/cards/SongCard";
 import Screen from "@/components/common/screen";
 import Title from "@/components/common/title";
 import { textColor } from "@/constants/colors";
-import { Song } from "@/constants/types";
 import { currentSetListStore } from "@/context/SetListStore";
-import { useSongStore } from "@/context/SongStore";
 import Entypo from '@expo/vector-icons/Entypo';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { FlashList } from "@shopify/flash-list";
 import { useRouter } from "expo-router";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
@@ -15,7 +11,6 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 export default function SetListView() {
     const router = useRouter()
     const { currentSetList, removeCurrentSetList } = currentSetListStore()
-    const { songs } = useSongStore()
 
     const handleBack = () => {
         removeCurrentSetList()
@@ -24,9 +19,9 @@ export default function SetListView() {
 
     if (!currentSetList) return <Screen />
 
-    const songIds = currentSetList?.songs ?? []
+    // const songIds = currentSetList?.songs ?? []
 
-    const filteredSongs = songs.filter((s: Song) => songIds.includes(s.id))
+    // const filteredSongs = songs.filter((s: Song) => songIds.includes(s.id))
     
 
     return (
@@ -41,11 +36,11 @@ export default function SetListView() {
                         <Entypo name="dots-three-horizontal" size={24} color={textColor} />
                     </TouchableOpacity>
                 </View>
-                <FlashList
+                {/* <FlashList
                     data={filteredSongs}
                     renderItem={({ item }) => <SongCard song={item}/>}
                     style={styles.allSongs}
-                    />
+                    /> */}
             </View>
         </Screen>
     )

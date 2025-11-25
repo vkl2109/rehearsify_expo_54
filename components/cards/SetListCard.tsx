@@ -1,7 +1,6 @@
 import { bgLight, border, borderMuted, highlight, textMuted } from "@/constants/colors";
 import { SetList } from "@/constants/types";
 import { currentSetListStore } from "@/context/SetListStore";
-import { formatJsDateToHHmmMMdd } from "@/utils/datetime";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useRouter } from "expo-router";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
@@ -36,10 +35,11 @@ function SetListCard({
                         w={100}
                         h={25}
                         c={border}
-                        text={formatJsDateToHHmmMMdd(setList.createdAt.toDate())}
+                        // text={formatJsDateToHHmmMMdd(setList.createdAt.toDate())}
+                        text=""
                         fs={12}
                         />
-                    <Title w={200} m={5} b>{setList.name}</Title>
+                    <Title w={200} m={5} b>{setList?.name}</Title>
                     <View style={styles.bottomLine}>
                         <Avatar name="V" size={20}/>
                         <Title fs={16} c={textMuted}>{}</Title>

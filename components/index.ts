@@ -1,11 +1,12 @@
+import { Timestamp } from "firebase/firestore"
+
 export const testSetLists = [
     {
         name: 'My First Set List',
-        songs: ['Song A', 'Song B', 'Song C'],
-    },
-    {
-        name: 'Chill Vibes',
-        songs: ['Song D', 'Song E', 'Song F'],
+        createdAt: Timestamp.now(),
+        createdBy: 'user1',
+        bandId: 'band1',
+        id: 'setlist1',
     },
 ]
 
