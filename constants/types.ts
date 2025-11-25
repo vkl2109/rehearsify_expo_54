@@ -3,7 +3,10 @@ import { Timestamp } from "firebase/firestore";
 
 interface SetList {
     name: string,
-    songs: string[],
+    id: string,
+    createdAt: Timestamp,
+    createdBy: string,
+    bandId: string
 }
 
 interface Song {

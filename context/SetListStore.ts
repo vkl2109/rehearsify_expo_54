@@ -1,18 +1,33 @@
-import { testSetLists } from '@/components'
-import { SetList } from '@/constants/types'
-import { create } from 'zustand'
+import { SetList } from '@/constants/types';
+import { db } from '@/firebase';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { create } from 'zustand';
 
 interface SetListStoreState {
     setLists: SetList[],
-    addSetList: (newData: SetList[]) => void,
+    addSetLists: (newData: string) => void,
     clearAllSetLists: () => void,
 }
 
 const useSetListStore = create<SetListStoreState>()((set) => ({
-    setLists: testSetLists,
-    addSetList: (newSetList: SetList[]) => set({
-        setLists: newSetList,
-    }),
+    setLists: [],
+    addSetLists: async (bandId: string) => {
+        const currentBandSetListsQuery = query(collection(db, "setlists"), where("bandId", "==", bandId));
+        const currentBandSetListSnaps = await getDocs(currentBandSetListsQuery);
+        const currentBandSetLists: SetList[] = []
+        currentBandSetListSnaps.forEach(doc => {
+        const data = doc.data()
+        const serializedSetList: SetList = {
+            id: doc.id,
+            name: data.name,
+            bandId: data.bandId,
+            createdAt: data.createdAt,
+            createdBy: data.createdBy,
+        }
+        currentBandSetLists.push(serializedSetList)
+        })
+        set({ setLists: currentBandSetLists })
+    },
     clearAllSetLists: () => set({
         setLists: [],
     })
@@ -36,5 +51,5 @@ const currentSetListStore = create<CurrentSetListState>()((set) => ({
 
 export {
     currentSetListStore, useSetListStore
-}
+};
 
