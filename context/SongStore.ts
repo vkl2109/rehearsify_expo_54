@@ -1,4 +1,3 @@
-import { testSongs } from '@/components'
 import { Song } from '@/constants/types'
 import { create } from 'zustand'
 
@@ -9,7 +8,7 @@ interface SongStoreState {
 }
 
 const useSongStore = create<SongStoreState>()((set) => ({
-    songs: testSongs,
+    songs: [],
     addSongs: (newSongs: Song[]) => set({
         songs: newSongs,
     }),

@@ -1,11 +1,13 @@
 import { SetListCard } from '@/components/cards/SetListCard';
+import SongCard from '@/components/cards/SongCard';
 import Input from '@/components/common/Input';
 import Screen from '@/components/common/screen';
 import Title from '@/components/common/title';
 import { bgLight, border } from '@/constants/colors';
 import { useAuthStore } from '@/context/AuthStore';
 import { useSetListStore } from '@/context/SetListStore';
-import { fetchSetListsForBand } from '@/utils/queries';
+import { useSongStore } from '@/context/SongStore';
+import { fetchSetListsForBand, fetchSongsForBand } from '@/utils/queries';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FlashList } from "@shopify/flash-list";
@@ -18,16 +20,24 @@ export default function Root() {
   const user  = useAuthStore(s => s.user)
   const setLists = useSetListStore(s => s.setLists)
   const addSetLists = useSetListStore(s => s.addSetLists)
+  const songs = useSongStore(s => s.songs)
+  const addSongs = useSongStore(s => s.addSongs)
 
   useEffect(() => {
     const bandId = user?.currentBandId;
     if (!bandId) return;
     if (setLists.length === 0) fetchSetListsForBand(bandId).then(addSetLists)
+    if (songs.length === 0) fetchSongsForBand(bandId).then(addSongs)
   },[user])
 
   const filteredSetlists = search != '' ? setLists.filter(sl => 
     sl.name.toLowerCase().includes(search.toLowerCase())
   ) : setLists;
+
+  const filteredSongs = search != '' ? songs.filter(s => 
+    s.title.toLowerCase().includes(search.toLowerCase()) ||
+    s.artist.toLowerCase().includes(search.toLowerCase())
+  ) : songs;
   return (
     <Screen>
       <View style={styles.header}>
@@ -49,6 +59,13 @@ export default function Root() {
         renderItem={({ item }) => <SetListCard setList={item}/>}
         style={styles.allSetLists}
         />
+      <FlashList
+        data={filteredSongs}
+        ListHeaderComponent={<Title m={10}>My Songs</Title>}
+        ListHeaderComponentStyle={styles.header}
+        renderItem={({ item }) => <SongCard song={item}/>}
+        style={styles.allSetLists}
+        />
     </Screen>
   );
 }
@@ -56,7 +73,7 @@ export default function Root() {
 const styles = StyleSheet.create({
   allSetLists: {
     width: '100%',
-    height: '100%',
+    height: 'auto',
   },
   header: {
     width: '100%',
