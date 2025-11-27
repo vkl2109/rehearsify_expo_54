@@ -1,5 +1,5 @@
 import { bgLight, border, borderMuted, highlight } from "@/constants/colors";
-import { Song } from "@/constants/types";
+import { Song, SongToSetList } from "@/constants/types";
 import Entypo from '@expo/vector-icons/Entypo';
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import Pill from "../common/pill";
@@ -7,9 +7,11 @@ import Title from "../common/title";
 
 
 export default function SongCard({
-    song
+    song,
+    songJoin
 }:{
-    song: Song
+    song: Song,
+    songJoin?: SongToSetList
 }) {
     if (!song) return <View/>
     
@@ -17,7 +19,7 @@ export default function SongCard({
         <View style={styles.cardWrapper}>
             <View style={styles.card}>
                 <View style={styles.cardImg}>
-                    <Title fs={20}>1</Title>
+                    <Title fs={20}>{songJoin?.order ?? 1}</Title>
                 </View>
                 <View style={styles.innerCard}>
                     <Pill
