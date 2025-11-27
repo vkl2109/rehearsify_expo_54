@@ -8,7 +8,8 @@ import { SetList, Song } from '@/constants/types';
 import { useAuthStore } from '@/context/AuthStore';
 import { useSetListStore } from '@/context/SetListStore';
 import { useSongStore } from '@/context/SongStore';
-import { fetchSetListsForBand, fetchSongsForBand } from '@/utils/queries';
+import { useSongToSetListStore } from '@/context/SongToSetListStore';
+import { fetchSetListsForBand, fetchSongsForBand, fetchSongsToSetListsForBand } from '@/utils/queries';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FlashList } from "@shopify/flash-list";
@@ -39,12 +40,15 @@ export default function Root() {
   const addSetLists = useSetListStore(s => s.addSetLists)
   const songs = useSongStore(s => s.songs)
   const addSongs = useSongStore(s => s.addSongs)
+  const songsToSetLists = useSongToSetListStore(s => s.songsToSetLists)
+  const addSongsToSetLists = useSongToSetListStore(s => s.addSongsToSetLists)
 
   useEffect(() => {
     const bandId = user?.currentBandId;
     if (!bandId) return;
     if (setLists.length === 0) fetchSetListsForBand(bandId).then(addSetLists)
     if (songs.length === 0) fetchSongsForBand(bandId).then(addSongs)
+    if (songsToSetLists.length === 0) fetchSongsToSetListsForBand(bandId).then(addSongsToSetLists)
   },[user])
 
   const filteredSetlists = search != '' 
@@ -81,7 +85,7 @@ export default function Root() {
         </TouchableOpacity>
       </View>
       <FlashList
-        data={setlistsAndSongs}
+        data={setlistsAndSongs || []}
         renderItem={({ item }) => {
           switch (item.type) {
             case 'setlist':

@@ -1,9 +1,13 @@
+import SongCard from "@/components/cards/SongCard";
 import Screen from "@/components/common/screen";
 import Title from "@/components/common/title";
 import { textColor } from "@/constants/colors";
 import { currentSetListStore } from "@/context/SetListStore";
+import { useSongStore } from "@/context/SongStore";
+import { useSongToSetListStore } from "@/context/SongToSetListStore";
 import Entypo from '@expo/vector-icons/Entypo';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { FlashList } from "@shopify/flash-list";
 import { useRouter } from "expo-router";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
@@ -11,18 +15,21 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 export default function SetListView() {
     const router = useRouter()
     const currentSetList = currentSetListStore(s => s.currentSetList)
-    const removeCurrentSetList = currentSetListStore(s => s.removeCurrentSetList)
+
+    if (!currentSetList) return <Screen />
+
+    const songsToSetLists = useSongToSetListStore(s => s.songsToSetLists) || []
+    const filteredSongIds = songsToSetLists.filter(stsl => stsl.setlistId === currentSetList?.id).map(stsl => stsl.songId)
+    const songs = useSongStore(s => s.songs) || []
+
+    const filteredSongs = filteredSongIds ? songs.filter(s => filteredSongIds.includes(s.id)) : []
+
 
     const handleBack = () => {
-        removeCurrentSetList()
         router.back()
     }
 
     if (!currentSetList) return <Screen />
-
-    // const songIds = currentSetList?.songs ?? []
-
-    // const filteredSongs = songs.filter((s: Song) => songIds.includes(s.id))
     
 
     return (
@@ -37,11 +44,11 @@ export default function SetListView() {
                         <Entypo name="dots-three-horizontal" size={24} color={textColor} />
                     </TouchableOpacity>
                 </View>
-                {/* <FlashList
-                    data={filteredSongs}
+                {filteredSongs.length > 0 && <FlashList
+                    data={filteredSongs || []}
                     renderItem={({ item }) => <SongCard song={item}/>}
                     style={styles.allSongs}
-                    /> */}
+                    />}
             </View>
         </Screen>
     )

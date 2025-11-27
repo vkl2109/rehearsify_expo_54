@@ -1,4 +1,4 @@
-import { SetList, Song, User } from "@/constants/types";
+import { SetList, Song, SongToSetList, User } from "@/constants/types";
 import { db } from "@/firebase";
 import { collection, doc, getDoc, getDocs, query, Timestamp, where } from "firebase/firestore";
 
@@ -59,6 +59,30 @@ async function fetchSongsForBand(bandId: string): Promise<Song[]> {
     }
 }
 
+async function fetchSongsToSetListsForBand(bandId: string): Promise<SongToSetList[]> {
+    try {
+        if (!bandId) return [];
+        console.log("fetching songs to setlists for band:", bandId);
+        const currentBandSongsToSetListsQuery = query(collection(db, "songsToSetLists"), where("bandId", "==", bandId));
+        const currentBandSongsToSetListsSnaps = await getDocs(currentBandSongsToSetListsQuery);
+        const currentBandSongsToSetLists: SongToSetList[] = []
+        currentBandSongsToSetListsSnaps.forEach(doc => {
+          const data = doc.data()
+          const serializedSongToSetList: SongToSetList = {
+              songId: data?.songId ?? "",
+              setlistId: data?.setlistId ?? "",
+              order: data?.order ?? 0,
+              bandId: data?.bandId ?? "",
+          }
+          currentBandSongsToSetLists.push(serializedSongToSetList)
+        })
+        return currentBandSongsToSetLists;
+    } catch (e) {
+        console.warn("Failed to fetch songs to setlists", e);
+        return [];
+    }
+}
+
 async function getUser(userId: string): Promise<User | null> {
     try {
         const userRef = doc(db, "users", userId);
@@ -85,6 +109,6 @@ async function getUser(userId: string): Promise<User | null> {
 }
 
 export {
-    fetchSetListsForBand, fetchSongsForBand, getUser
+    fetchSetListsForBand, fetchSongsForBand, fetchSongsToSetListsForBand, getUser
 };
 

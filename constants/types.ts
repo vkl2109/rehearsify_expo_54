@@ -23,6 +23,13 @@ interface Song {
     bandId: string,
 }
 
+interface SongToSetList {
+    songId: string,
+    setlistId: string,
+    order: number,
+    bandId: string,
+}
+
 interface User {
     uid: string,
     email: string | null,
@@ -48,7 +55,6 @@ interface BandMember extends User {
 
 export {
     Band, BandMember, SetList,
-    Song,
-    User
+    Song, SongToSetList, User
 };
 
