@@ -22,10 +22,15 @@ type HeaderItem = {
   type: 'header';
 }
 
+type EmptyItem = {
+  title: string;
+  type: 'empty';
+}
+
 type SetListItem = SetList & { type: 'setlist' };
 type SongItem = Song & { type: 'song' };
 
-type Section = HeaderItem | SetListItem | SongItem;
+type Section = HeaderItem | EmptyItem | SetListItem | SongItem;
 
 export default function Root() {
   const [ search, setSearch ] = useState('');
@@ -52,17 +57,15 @@ export default function Root() {
   ) : songs || [];
 
   const setlistsAndSongs: Section[] = [
-    {
-      title: 'My Set Lists',
-      type: 'header',
-    },
-    ...filteredSetlists.map(sl => ({...sl, type: 'setlist' as const})),
-    {
-      title: 'My Songs',
-      type: 'header',
-    },
-    ...filteredSongs.map(s => ({...s, type: 'song' as const})),
-  ]
+    { title: 'My Set Lists', type: 'header' },
+    ...(filteredSetlists.length > 0
+      ? filteredSetlists.map(sl => ({ ...sl, type: 'setlist' as const }))
+      : [{ title: 'No Set Lists found', type: 'empty' as const }]),
+    { title: 'My Songs', type: 'header' },
+    ...(filteredSongs.length > 0
+      ? filteredSongs.map(s => ({ ...s, type: 'song' as const }))
+      : [{ title: 'No Songs found', type: 'empty' as const }]),
+  ];
   return (
     <Screen>
       <View style={styles.header}>
@@ -87,6 +90,8 @@ export default function Root() {
               return <SongCard song={item}/>
             case 'header':
               return <Title m={10}>{item.title}</Title>
+            case 'empty':
+              return <Title m={10} fs={16} fw='100'>{item.title}</Title>
             default:
               return null;
           }
