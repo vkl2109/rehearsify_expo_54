@@ -1,4 +1,4 @@
-import { bgLight, primary, textColor } from "@/constants/colors";
+import { bgLight, borderMuted, textColor } from "@/constants/colors";
 import React, { useEffect, useState } from "react";
 import {
   StyleProp,
@@ -76,7 +76,7 @@ const movingBtn = (width: number, count: number): StyleProp<ViewStyle> => {
     width: width / count - 20,
     borderRadius: 100,
     padding: 5,
-    backgroundColor: primary,
+    backgroundColor: borderMuted,
     justifyContent: "center",
     alignItems: "center",
   };

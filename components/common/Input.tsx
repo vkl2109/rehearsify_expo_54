@@ -12,10 +12,11 @@ import {
   View
 } from "react-native";
 
-type InputVariant = "text" | "email" | "password" | "search";
+type InputVariant = "text" | "email" | "password" | "search" | "number";
 
 interface InputProps extends TextInputProps {
   variant?: InputVariant;
+  m?: DimensionValue;
   w?: DimensionValue;
   h?: DimensionValue;
   r?: number;
@@ -38,6 +39,7 @@ export default function Input({
   bg = bgLight,
   pc = border,
   fs = 24,
+  m = 0,
   icon,
   placeholder,
   input,
@@ -80,6 +82,16 @@ export default function Input({
           secureTextEntry: false,
         };
 
+      case "number":
+        return {
+          keyboardType: "number-pad",
+          autoCapitalize: "none",
+          autoCorrect: false,
+          textContentType: "none" as TextInputProps["textContentType"],
+          autoComplete: "off" as TextInputProps["autoComplete"],
+          secureTextEntry: false,
+        };
+
       default:
         return {};
     }
@@ -91,6 +103,7 @@ export default function Input({
       style={[
         styles.wrapper,
         {
+          margin: m,
           width: w,
           height: h,
           borderRadius: r,
@@ -105,7 +118,15 @@ export default function Input({
         placeholder={placeholder}
         placeholderTextColor={pc}
         value={input}
-        onChangeText={setInput}
+        onChangeText={(text) => {
+          if (variant === "number") {
+            // Allow only digits
+            const numericText = text.replace(/[^0-9]/g, "");
+            setInput(numericText);
+          } else {
+            setInput(text);
+          }
+        }}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         style={[styles.input, style, { fontSize: fs, color: textColor }]}
