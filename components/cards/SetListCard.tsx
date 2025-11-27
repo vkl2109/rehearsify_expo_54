@@ -32,7 +32,6 @@ function SetListCard({
     const createdByUser = getUserById(createdBy)
 
     useEffect(() => {
-        if (!createdBy) return;
         if (!createdByUser) {
             getUser(createdBy).then((u) => {
                 if (u) setUser(u)

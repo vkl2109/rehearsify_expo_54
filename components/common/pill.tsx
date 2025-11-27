@@ -27,7 +27,8 @@ export default function Pill({
             width: w, 
             backgroundColor: c,
             margin: m,
-            padding: p
+            padding: p,
+            paddingHorizontal: typeof p === "number" ? p * 2 : 10
         }]}>
             <Text style={{...styles.pillText,
                 fontSize: fs
