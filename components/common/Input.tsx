@@ -9,13 +9,12 @@ import {
   TextInputProps,
   TextStyle,
   TouchableOpacity,
-  View,
-  ViewProps,
+  View
 } from "react-native";
 
 type InputVariant = "text" | "email" | "password" | "search";
 
-interface InputProps extends ViewProps {
+interface InputProps extends TextInputProps {
   variant?: InputVariant;
   w?: DimensionValue;
   h?: DimensionValue;
@@ -89,7 +88,6 @@ export default function Input({
 
   return (
     <View
-      {...props}
       style={[
         styles.wrapper,
         {
@@ -99,7 +97,6 @@ export default function Input({
           borderColor: isFocused ? c : "transparent",
           backgroundColor: bg,
         },
-        style,
       ]}
     >
       {icon}
@@ -111,8 +108,9 @@ export default function Input({
         onChangeText={setInput}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        style={[styles.input, { fontSize: fs, color: textColor }]}
+        style={[styles.input, style, { fontSize: fs, color: textColor }]}
         {...config}
+        {...props}
       />
 
       {/* Clear button for search/email */}

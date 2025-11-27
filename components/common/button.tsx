@@ -23,10 +23,13 @@ export default function Button({
     c = primary,
     fs = 16,
     onPress,
-    children
+    children,
+    ...props
 }: ButtonProps) {
     return(
-        <TouchableOpacity style={{...styles.btnContainer, 
+        <TouchableOpacity 
+        {...props}
+        style={{...styles.btnContainer, 
             width: w, 
             height: h,
             borderRadius: r,
