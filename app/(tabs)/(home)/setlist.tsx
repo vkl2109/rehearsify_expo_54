@@ -1,7 +1,7 @@
 import SongCard from "@/components/cards/SongCard";
 import Screen from "@/components/common/screen";
 import Title from "@/components/common/title";
-import { bgLight, textColor } from "@/constants/colors";
+import { bgLight, highlight } from "@/constants/colors";
 import { SongToSetList } from "@/constants/types";
 import { currentSetListStore } from "@/context/SetListStore";
 import { useSongStore } from "@/context/SongStore";
@@ -40,11 +40,11 @@ export default function SetListView() {
             <View style={styles.content}>
                 <View style={styles.header}>
                     <TouchableOpacity onPress={handleBack} style={styles.iconBtn}>
-                        <Ionicons name="chevron-back" size={24} color={textColor}/>
+                        <Ionicons name="chevron-back" size={24} color={highlight}/>
                     </TouchableOpacity>
                     <Title b>{currentSetList?.name}</Title>
                     <TouchableOpacity style={styles.iconBtn}>
-                        <Entypo name="dots-three-horizontal" size={24} color={textColor} />
+                        <Entypo name="dots-three-horizontal" size={24} color={highlight} />
                     </TouchableOpacity>
                 </View>
                 {filteredSongs.length > 0 && <FlashList

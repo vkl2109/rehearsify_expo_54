@@ -1,11 +1,18 @@
 import { bgLight, borderMuted, secondary } from '@/constants/colors';
+import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
-import ActionSheet from 'react-native-actions-sheet';
+import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Button from '../common/button';
 
 function AddSheet() {
     const insets = useSafeAreaInsets();
+    const router = useRouter()
+
+    const handleNewSong = () => {
+        router.push('/(tabs)/(home)/addSong')
+        SheetManager.hide('AddSheet')
+    }
     return (
         <ActionSheet 
             containerStyle={styles.container}
@@ -14,7 +21,7 @@ function AddSheet() {
             gestureEnabled
             >
             <View style={styles.sheet}>
-                <Button onPress={() => {}}>New Song</Button>
+                <Button onPress={handleNewSong}>New Song</Button>
                 <Button onPress={() => {}} c={secondary}>New Set List</Button>
             </View>
         </ActionSheet>

@@ -64,11 +64,11 @@ export default function Root() {
     { title: 'My Set Lists', type: 'header' },
     ...(filteredSetlists.length > 0
       ? filteredSetlists.map(sl => ({ ...sl, type: 'setlist' as const }))
-      : [{ title: 'No Set Lists found', type: 'empty' as const }]),
+      : [{ title: 'No Set Lists', type: 'empty' as const }]),
     { title: 'My Songs', type: 'header' },
     ...(filteredSongs.length > 0
       ? filteredSongs.map(s => ({ ...s, type: 'song' as const }))
-      : [{ title: 'No Songs found', type: 'empty' as const }]),
+      : [{ title: 'No Songs', type: 'empty' as const }]),
   ];
   return (
     <Screen>

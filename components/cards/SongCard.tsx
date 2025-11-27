@@ -24,7 +24,7 @@ export default function SongCard({
 
     const toggleExpand = () => {
         setExpanded(!expanded);
-        height.value = withTiming(expanded ? 0 : 80, { duration: 300 });
+        height.value = withTiming(expanded ? 0 : 50, { duration: 300 });
     }
 
     const animatedStyle = useAnimatedStyle(() => ({
