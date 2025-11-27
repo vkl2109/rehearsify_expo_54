@@ -1,6 +1,9 @@
-import { bgLight, border, borderMuted, highlight } from "@/constants/colors";
+import { bg, bgLight, border, borderMuted, highlight, textColor } from "@/constants/colors";
 import { Song, SongToSetList } from "@/constants/types";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import Entypo from '@expo/vector-icons/Entypo';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
@@ -28,12 +31,16 @@ export default function SongCard({
         height: height.value
     }));
 
+    const serializedSongType = song?.type ?? "Original"
+    const songTime = song?.minutes && song?.seconds ? `${song.minutes}:${song.seconds < 10 ? '0' + song.seconds : song.seconds}` : "0:00"
+
     return(
         <View style={styles.cardWrapper}>
             <View style={styles.card}>
-                <View style={styles.cardImg}>
+                {songJoin ? <View style={styles.cardImg}>
                     <Title fs={20}>{songJoin?.order ?? 1}</Title>
-                </View>
+                </View>:
+                <View style={{ width: 10}} />}
                 <View style={styles.innerCard}>
                     <Pill
                         fs={14}
@@ -50,12 +57,25 @@ export default function SongCard({
                     </TouchableOpacity>
                 </View>
             </View>
-            {/* Collapsible content */}
             <Animated.View style={[styles.collapsibleContent, animatedStyle]}>
                 <View style={styles.topRow}>
                     <Pill
-                        text={song?.type ?? "Original"}
+                        text={songTime}
                         fs={15}
+                        c={'none'}
+                        icon={<AntDesign name="clock-circle" size={16} color={textColor} />}
+                        />
+                    <Pill
+                        text={song?.key.join(' | ') ?? "C Major"}
+                        fs={15}
+                        c={'none'}
+                        icon={<Ionicons name="musical-notes" size={16} color={textColor} />}
+                        />
+                    <Pill
+                        text={`${song?.bpm ?? 120} BPM`}
+                        fs={15}
+                        c={'none'}
+                        icon={<FontAwesome name="heartbeat" size={16} color={textColor} />}
                         />
                 </View>
             </Animated.View>
@@ -103,15 +123,16 @@ const styles = StyleSheet.create({
     collapsibleContent: {
         width: '100%',
         overflow: 'hidden',
-        backgroundColor: borderMuted,
-        paddingHorizontal: 15,
-        justifyContent: 'center',
+        backgroundColor: bg,
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
     },
     topRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         width: '100%',
-        marginTop: 10,
+        padding: 10,
     }
 });

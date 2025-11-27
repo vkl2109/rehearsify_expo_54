@@ -42,7 +42,7 @@ export default function SetListView() {
                     <TouchableOpacity onPress={handleBack} style={styles.iconBtn}>
                         <Ionicons name="chevron-back" size={24} color={textColor}/>
                     </TouchableOpacity>
-                    <Title>{currentSetList?.name}</Title>
+                    <Title b>{currentSetList?.name}</Title>
                     <TouchableOpacity style={styles.iconBtn}>
                         <Entypo name="dots-three-horizontal" size={24} color={textColor} />
                     </TouchableOpacity>
