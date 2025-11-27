@@ -18,16 +18,17 @@ export default function Pill({
     fs = 10,
     m = 0,
     p = 5,
-    text
+    text,
+    style
 }: PillProps) {
     return(
-        <View style={{...styles.pillWrapper, 
+        <View style={[style, styles.pillWrapper, {
             height: h, 
             width: w, 
             backgroundColor: c,
             margin: m,
             padding: p
-        }}>
+        }]}>
             <Text style={{...styles.pillText,
                 fontSize: fs
             }}>{text}</Text>

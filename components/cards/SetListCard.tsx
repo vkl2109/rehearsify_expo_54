@@ -17,6 +17,7 @@ function SetListCard({
 }: {
     setList: SetList
 }) {
+    if (!setList) return <View/>
     const router = useRouter()
     const setCurrentSetList = currentSetListStore(s => s.setCurrentSetList)
     const handleRedirect = () => {
@@ -31,6 +32,7 @@ function SetListCard({
     const createdByUser = getUserById(createdBy)
 
     useEffect(() => {
+        if (!createdBy) return;
         if (!createdByUser) {
             getUser(createdBy).then((u) => {
                 if (u) setUser(u)

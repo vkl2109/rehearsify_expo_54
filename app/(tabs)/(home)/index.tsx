@@ -4,6 +4,7 @@ import Input from '@/components/common/Input';
 import Screen from '@/components/common/screen';
 import Title from '@/components/common/title';
 import { bgLight, border } from '@/constants/colors';
+import { SetList, Song } from '@/constants/types';
 import { useAuthStore } from '@/context/AuthStore';
 import { useSetListStore } from '@/context/SetListStore';
 import { useSongStore } from '@/context/SongStore';
@@ -14,6 +15,17 @@ import { FlashList } from "@shopify/flash-list";
 import { useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
+
+
+type HeaderItem = {
+  title: string;
+  type: 'header';
+}
+
+type SetListItem = SetList & { type: 'setlist' };
+type SongItem = Song & { type: 'song' };
+
+type Section = HeaderItem | SetListItem | SongItem;
 
 export default function Root() {
   const [ search, setSearch ] = useState('');
@@ -30,14 +42,27 @@ export default function Root() {
     if (songs.length === 0) fetchSongsForBand(bandId).then(addSongs)
   },[user])
 
-  const filteredSetlists = search != '' ? setLists.filter(sl => 
-    sl.name.toLowerCase().includes(search.toLowerCase())
-  ) : setLists;
+  const filteredSetlists = search != '' 
+  ? setLists.filter(sl => sl?.name?.toLowerCase().includes(search.toLowerCase()))
+  : setLists || [];
 
   const filteredSongs = search != '' ? songs.filter(s => 
-    s.title.toLowerCase().includes(search.toLowerCase()) ||
-    s.artist.toLowerCase().includes(search.toLowerCase())
-  ) : songs;
+    s?.title?.toLowerCase().includes(search.toLowerCase()) ||
+    s?.artist?.toLowerCase().includes(search.toLowerCase())
+  ) : songs || [];
+
+  const setlistsAndSongs: Section[] = [
+    {
+      title: 'My Set Lists',
+      type: 'header',
+    },
+    ...filteredSetlists.map(sl => ({...sl, type: 'setlist' as const})),
+    {
+      title: 'My Songs',
+      type: 'header',
+    },
+    ...filteredSongs.map(s => ({...s, type: 'song' as const})),
+  ]
   return (
     <Screen>
       <View style={styles.header}>
@@ -53,18 +78,21 @@ export default function Root() {
         </TouchableOpacity>
       </View>
       <FlashList
-        data={filteredSetlists}
-        ListHeaderComponent={<Title m={10}>My Set Lists</Title>}
-        ListHeaderComponentStyle={styles.header}
-        renderItem={({ item }) => <SetListCard setList={item}/>}
+        data={setlistsAndSongs}
+        renderItem={({ item }) => {
+          switch (item.type) {
+            case 'setlist':
+              return <SetListCard setList={item}/>
+            case 'song':
+              return <SongCard song={item}/>
+            case 'header':
+              return <Title m={10}>{item.title}</Title>
+            default:
+              return null;
+          }
+        }}
         style={styles.allSetLists}
-        />
-      <FlashList
-        data={filteredSongs}
-        ListHeaderComponent={<Title m={10}>My Songs</Title>}
-        ListHeaderComponentStyle={styles.header}
-        renderItem={({ item }) => <SongCard song={item}/>}
-        style={styles.allSetLists}
+        getItemType={(item) => item.type}
         />
     </Screen>
   );
