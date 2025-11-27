@@ -11,7 +11,7 @@ interface AddSongStore {
     key: string;
     bpm: number;
     setTitleArtist: (title: string, artist: string, songType: string) => void;
-    backStep1: () => void;
+    backStep: () => void;
     setMinutesSecondsKeyBpm: (minutes: number, seconds: number, key: string, bpm: number) => void;
 }
 
@@ -37,9 +37,9 @@ const useAddSongStore = create<AddSongStore>()((set) => ({
         songType: songType,
         step: 1
     }),
-    backStep1: () => set({
-        step: 0
-    }),
+    backStep: () => set((state) => ({
+        step: Math.max(0, state.step - 1), // prevents negative
+    })),
 }))
 
 export {

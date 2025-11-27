@@ -46,9 +46,9 @@ export default function Root() {
   useEffect(() => {
     const bandId = user?.currentBandId;
     if (!bandId) return;
-    if (setLists.length === 0) fetchSetListsForBand(bandId).then(addSetLists)
-    if (songs.length === 0) fetchSongsForBand(bandId).then(addSongs)
-    if (songsToSetLists.length === 0) fetchSongsToSetListsForBand(bandId).then(addSongsToSetLists)
+    if (setLists.length === 0) fetchSetListsForBand(bandId).then(addSetLists).catch(console.error)
+    if (songs.length === 0) fetchSongsForBand(bandId).then(addSongs).catch(console.error)
+    if (songsToSetLists.length === 0) fetchSongsToSetListsForBand(bandId).then(addSongsToSetLists).catch(console.error)
   },[user])
 
   const filteredSetlists = search != '' 
@@ -61,11 +61,11 @@ export default function Root() {
   ) : songs || [];
 
   const setlistsAndSongs: Section[] = [
-    { title: 'My Set Lists', type: 'header' },
+    { title: 'Set Lists', type: 'header' },
     ...(filteredSetlists.length > 0
       ? filteredSetlists.map(sl => ({ ...sl, type: 'setlist' as const }))
       : [{ title: 'No Set Lists', type: 'empty' as const }]),
-    { title: 'My Songs', type: 'header' },
+    { title: 'Songs', type: 'header' },
     ...(filteredSongs.length > 0
       ? filteredSongs.map(s => ({ ...s, type: 'song' as const }))
       : [{ title: 'No Songs', type: 'empty' as const }]),
@@ -79,6 +79,7 @@ export default function Root() {
           input={search}
           setInput={setSearch}
           w="80%"
+          m={10}
           />
         <TouchableOpacity style={styles.filterButton} onPress={() => SheetManager.show('FilterSheet')}>
           <Ionicons name="filter" size={24} color={border} />

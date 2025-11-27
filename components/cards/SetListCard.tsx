@@ -51,7 +51,6 @@ function SetListCard({
                 </View>
                 <View style={styles.cardContent}>
                     <Pill 
-                        w={100}
                         h={25}
                         c={border}
                         text={formatJsDateToHHmmMMdd(setList?.createdAt?.toDate())}

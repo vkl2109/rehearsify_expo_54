@@ -10,6 +10,21 @@ export const testSetLists = [
     },
 ]
 
+export const keys: string[] = [
+    'C Major', 'C Minor',
+    'C# Major', 'C# Minor',
+    'D Major', 'D Minor',
+    'Eb Major', 'Eb Minor',
+    'E Major', 'E Minor',
+    'F Major', 'F Minor',
+    'F# Major', 'F# Minor',
+    'G Major', 'G Minor',
+    'Ab Major', 'Ab Minor',
+    'A Major', 'A Minor',
+    'Bb Major', 'Bb Minor',
+    'B Major', 'B Minor'
+]
+
 export const testSongs = [
     {
         id: 'Song A',

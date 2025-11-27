@@ -1,20 +1,28 @@
+import { keys } from "@/components";
+import SongCard from "@/components/cards/SongCard";
 import Button from "@/components/common/button";
+import Dropdown from "@/components/common/Dropdown";
 import Input from "@/components/common/Input";
 import Progress from "@/components/common/Progress";
 import Screen from "@/components/common/screen";
 import { SegmentControl } from "@/components/common/SegmentControl";
 import Title from "@/components/common/title";
 import { bgLight, borderMuted, highlight, primary, textColor } from "@/constants/colors";
+import { Song } from "@/constants/types";
 import { useAddSongStore } from "@/context/AddSongStore";
+import { useAuthStore } from "@/context/AuthStore";
+import { useSongStore } from "@/context/SongStore";
+import { db } from "@/firebase";
+import { fetchSongsForBand } from "@/utils/queries";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
+import { addDoc, collection } from "firebase/firestore";
 import { useCallback, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-
 
 function Step1() {
     const setTitleArtist = useAddSongStore(s => s.setTitleArtist)
@@ -68,21 +76,35 @@ function Step1() {
 }
 
 function Step2 () {
-    const backStep1 = useAddSongStore(s => s.backStep1)
-    const [ localMinutes, setLocalMinutes ] = useState<string>('');
-    const [ localSeconds, setLocalSeconds ] = useState<string>('');
-    const [ localKey, setLocalKey ] = useState<string>('');
-    const [ localBpm, setLocalBpm ] = useState<string>('');
+    const backStep = useAddSongStore(s => s.backStep)
+    const minutes = useAddSongStore(s => s.minutes)
+    const seconds = useAddSongStore(s => s.seconds)
+    const key = useAddSongStore(s => s.key)
+    const bpm = useAddSongStore(s => s.bpm)
+    const setMinutesSecondsKeyBpm = useAddSongStore(s => s.setMinutesSecondsKeyBpm)
+    const [ localMinutes, setLocalMinutes ] = useState<string>(String(minutes));
+    const [ localSeconds, setLocalSeconds ] = useState<string>(String(seconds));
+    const [ localKey, setLocalKey ] = useState<string>(key);
+    const [ localBpm, setLocalBpm ] = useState<string>(String(bpm));
     const disabled = (localMinutes.trim() === '' && localSeconds.trim() === '' && localKey.trim() === '' && localBpm.trim() === '')
 
     const handleNext = () => {
-
+        if (disabled) return
+        const parsedMinutes = parseInt(localMinutes) || 0;
+        const parsedSeconds = parseInt(localSeconds) || 0;
+        const parsedBpm = parseInt(localBpm) || 0;
+        setMinutesSecondsKeyBpm(
+            parsedMinutes,
+            parsedSeconds,
+            localKey,
+            parsedBpm
+        )
     }
     return (
         <View style={styles.stepWrapper}>
             <TouchableOpacity
                 style={styles.backBtn}
-                onPress={backStep1}
+                onPress={backStep}
                 >
                 <Ionicons name="arrow-back-circle-outline" size={24} color={highlight} />
                 <Title c={highlight}>Back</Title>
@@ -107,13 +129,13 @@ function Step2 () {
                 />
             </View>
             <View style={styles.inputRow}>
-                <Input
-                    placeholder="key"
-                    input={localKey}
-                    setInput={setLocalKey}
+                <Dropdown
+                    options={keys}
+                    selected={localKey}
+                    setSelected={setLocalKey}
+                    placeholder="Key"
                     w={'47.5%'}
-                    icon={<Ionicons name="musical-notes" size={20} color={highlight} />}
-                />
+                    />
                 <Input
                     placeholder="bpm"
                     input={localBpm}
@@ -136,6 +158,62 @@ function Step2 () {
     )
 }
 
+function Step3() {
+    const router = useRouter()
+    const currentBandId = useAuthStore(s => s.user?.currentBandId)
+    const addSongs = useSongStore(s => s.addSongs)
+    const backStep = useAddSongStore(s => s.backStep)
+    const newSong = {
+        title: useAddSongStore(s => s.title),
+        artist: useAddSongStore(s => s.artist),
+        type: useAddSongStore(s => s.songType),
+        minutes: useAddSongStore(s => s.minutes),
+        seconds: useAddSongStore(s => s.seconds),
+        key: [useAddSongStore(s => s.key)],
+        bpm: useAddSongStore(s => s.bpm),
+        link: '',
+        notes: '',
+        bandId: currentBandId || ''
+    }
+
+    const newSongWithId: Song = {
+        ...newSong,
+        id: ''
+    }
+
+    const handleAddSong = async () => {
+        try {
+            if (!currentBandId) throw new Error("No band selected");
+            await addDoc(collection(db, "songs"), newSong)
+            const newSongs = await fetchSongsForBand(currentBandId)
+            addSongs(newSongs)
+            router.back()
+        } catch (error) {
+            console.error("Error adding song:", error);
+        }
+    }
+    return(
+        <View style={styles.stepWrapper}>
+            <TouchableOpacity
+                style={styles.backBtn}
+                onPress={backStep}
+                >
+                <Ionicons name="arrow-back-circle-outline" size={24} color={highlight} />
+                <Title c={highlight}>Back</Title>
+            </TouchableOpacity>
+            <SongCard song={newSongWithId} />
+            <Button
+                onPress={handleAddSong}
+                w={'100%'}
+                h={50}
+                r={100}
+                >
+                <Title fs={20} b c={textColor}>{'Add Song'}</Title>
+            </Button>
+        </View>
+    )
+}
+
 export default function AddSongView() {
     const step = useAddSongStore(s => s.step)
     const router = useRouter()
@@ -148,29 +226,40 @@ export default function AddSongView() {
         const exiting  = FadeOut
         switch(step) {
             case 0:
-            return (
-                <Animated.View 
-                    entering={entering} 
-                    key={step}
-                    exiting={exiting}
-                    style={{ width: '100%' }}
-                    >
-                    <Step1 />
-                </Animated.View>
-            )
+                return (
+                    <Animated.View 
+                        entering={entering} 
+                        key={step}
+                        exiting={exiting}
+                        style={{ width: '100%' }}
+                        >
+                        <Step1 />
+                    </Animated.View>
+                )
             case 1:
-            return (
-                <Animated.View 
-                    key={step}
-                    entering={entering} 
-                    exiting={exiting}
-                    style={{ width: '100%' }}
-                    >
-                    <Step2 />
-                </Animated.View>
-            )
+                return (
+                    <Animated.View 
+                        key={step}
+                        entering={entering} 
+                        exiting={exiting}
+                        style={{ width: '100%' }}
+                        >
+                        <Step2 />
+                    </Animated.View>
+                )
+            case 2:
+                return(
+                    <Animated.View 
+                        key={step}
+                        entering={entering} 
+                        exiting={exiting}
+                        style={{ width: '100%' }}
+                        >
+                        <Step3 />
+                    </Animated.View>
+                )
             default:
-            return <Step1 />
+                return <View />
         }
     }, [step])
 
@@ -183,7 +272,7 @@ export default function AddSongView() {
                     <TouchableOpacity onPress={handleBack} style={styles.iconBtn}>
                         <Ionicons name="chevron-back" size={24} color={highlight}/>
                     </TouchableOpacity>
-                    <Title>Add Song</Title>
+                    <Title b>New Song</Title>
                     <View style={{ width: 44}}/>
                 </View>
                 <View style={styles.progressWrapper}>
