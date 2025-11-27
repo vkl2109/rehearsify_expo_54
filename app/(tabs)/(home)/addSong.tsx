@@ -2,6 +2,7 @@ import Button from "@/components/common/button";
 import Input from "@/components/common/Input";
 import Progress from "@/components/common/Progress";
 import Screen from "@/components/common/screen";
+import { SegmentControl } from "@/components/common/SegmentControl";
 import Title from "@/components/common/title";
 import { bgLight, borderMuted, highlight, primary, textColor } from "@/constants/colors";
 import { useAddSongStore } from "@/context/AddSongStore";
@@ -39,6 +40,11 @@ function Step1() {
                 setInput={setLocalArtist}
                 icon={<Feather name="user" size={24} color={highlight} />}
             />
+            <SegmentControl 
+                data={['Original', 'Cover'].map((label, index) => ({ index, label }))}
+                selected={'Original'}
+                setSelected={(value) => console.log(value)}
+                />
             <Button
                 onPress={handleNext}
                 w={'100%'}
@@ -53,9 +59,15 @@ function Step1() {
 }
 
 function Step2 () {
+
     return (
         <View style={styles.stepWrapper}>
-            <Title>Step 2</Title>
+            <TouchableOpacity
+                style={styles.backBtn}
+                >
+                <Ionicons name="arrow-back-circle-outline" size={24} color={highlight} />
+                <Title c={highlight}>Back</Title>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -142,5 +154,11 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    backBtn: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     }
 });
