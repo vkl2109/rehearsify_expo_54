@@ -1,3 +1,4 @@
+import Progress from "@/components/common/Progress";
 import Screen from "@/components/common/screen";
 import Title from "@/components/common/title";
 import { bgLight, highlight } from "@/constants/colors";
@@ -21,6 +22,9 @@ export default function AddSongView() {
                     </TouchableOpacity>
                     <Title>Add Song</Title>
                     <View style={{ width: 44}}/>
+                </View>
+                <View style={styles.progressWrapper}>
+                    <Progress progress={0.1} />
                 </View>
             </View>
         </Screen>
@@ -46,4 +50,7 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         backgroundColor: bgLight
     },
+    progressWrapper: {
+        padding: 15
+    }
 });
