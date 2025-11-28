@@ -1,6 +1,6 @@
 import { SetList, Song, SongToSetList, User } from "@/constants/types";
 import { db } from "@/firebase";
-import { collection, doc, getDoc, getDocs, query, Timestamp, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, runTransaction, Timestamp, where } from "firebase/firestore";
 
 
 async function fetchSetListsForBand(bandId: string): Promise<SetList[]> {
@@ -108,7 +108,26 @@ async function getUser(userId: string): Promise<User | null> {
     }
 }
 
-export {
-    fetchSetListsForBand, fetchSongsForBand, fetchSongsToSetListsForBand, getUser
-};
+async function deleteSetListAndSongs(setListId: string): Promise<void> {
+    try {
+        await runTransaction(db, async (transaction) => {
+            const setListDocRef = doc(db, "setlists", setListId);
+            const songsToSetListsQuery = query(
+                collection(db, "songsToSetLists"),
+                where("setlistId", "==", setListId)
+            );
+            const songsToSetListsSnaps = await getDocs(songsToSetListsQuery);
+            songsToSetListsSnaps.forEach((docSnap) => {
+                transaction.delete(docSnap.ref);
+            });
+            transaction.delete(setListDocRef);
+        });
+        console.log("Transaction successfully committed!");
+    } catch (e) {
+        console.log(e)
+        throw new Error("Transaction failed: ");
+    }
+}
+
+export { deleteSetListAndSongs, fetchSetListsForBand, fetchSongsForBand, fetchSongsToSetListsForBand, getUser };
 

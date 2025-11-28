@@ -35,7 +35,7 @@ function SetListCard({
         if (!createdByUser) {
             getUser(createdBy).then((u) => {
                 if (u) setUser(u)
-        })
+            }).catch(console.error)
         }
     },[createdByUser, createdBy])
 
