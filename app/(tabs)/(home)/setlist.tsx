@@ -11,6 +11,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { FlashList } from "@shopify/flash-list";
 import { useRouter } from "expo-router";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { SheetManager } from "react-native-actions-sheet";
 
 
 export default function SetListView() {
@@ -33,6 +34,10 @@ export default function SetListView() {
     }
 
     if (!currentSetList) return <Screen />
+
+    const handleOpenSheet = () => {
+        SheetManager.show('SetlistSheet')
+    }
     
 
     return (
@@ -43,7 +48,7 @@ export default function SetListView() {
                         <Ionicons name="chevron-back" size={24} color={highlight}/>
                     </TouchableOpacity>
                     <Title b>{currentSetList?.name}</Title>
-                    <TouchableOpacity style={styles.iconBtn}>
+                    <TouchableOpacity style={styles.iconBtn} onPress={handleOpenSheet}>
                         <Entypo name="dots-three-horizontal" size={24} color={highlight} />
                     </TouchableOpacity>
                 </View>

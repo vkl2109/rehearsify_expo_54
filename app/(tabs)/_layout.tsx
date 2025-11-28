@@ -1,9 +1,10 @@
+import HapticScaleButton from '@/components/common/HapticButton';
 import { TabButton } from '@/components/common/TabButton';
 import { primary, textColor } from '@/constants/colors';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { TabList, Tabs, TabSlot, TabTrigger } from 'expo-router/ui';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 
 // Defining the layout of the custom tab navigator
@@ -21,12 +22,12 @@ export default function Layout() {
             />
         </TabTrigger>
         <View />
-        <TouchableOpacity 
+        <HapticScaleButton
           onPress={() => SheetManager.show('AddSheet')}
           style={styles.plusBtn}
-          >
-          <Entypo name="plus" size={36} color={textColor} />
-        </TouchableOpacity>
+        >
+          <Entypo name="plus" size={42} color={textColor}/>
+        </HapticScaleButton>
         <TabTrigger name="profile" href="/profile" asChild style={{flex: 1}}>
           <TabButton
             icon={<FontAwesome name="user-circle" size={24} color={textColor} />}
@@ -52,24 +53,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
+    position: 'relative',
   },
   plusBtn: {
-    backgroundColor: primary,
-    borderRadius: 100,
-    position: 'absolute',
-    top: -25,
-    zIndex: 10,
-    height: 60,
-    width: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: textColor,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  }
+  backgroundColor: primary,
+  borderRadius: 100,
+  position: 'absolute',
+  top: -40,
+  height: 65,
+  width: 65,
+  justifyContent: 'center',
+  alignItems: 'center',
+  shadowColor: textColor,
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.25,
+  shadowRadius: 3.84,
+  elevation: 5,
+  zIndex: 1000,
+}
 });
