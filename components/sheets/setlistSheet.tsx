@@ -1,13 +1,15 @@
-import { bgLight, borderMuted, danger, primary, secondary, textColor } from '@/constants/colors';
+import { bgLight, border, borderMuted, danger, primary, secondary, textColor } from '@/constants/colors';
 import { currentSetListStore, useSetListStore } from '@/context/SetListStore';
+import { useSongStore } from '@/context/SongStore';
 import { deleteSetListAndSongs, refetchSetList, updateSetListDetails } from '@/utils/queries';
 import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
-import ActionSheet, { ActionSheetRef } from 'react-native-actions-sheet';
+import ActionSheet, { ActionSheetRef, FlatList } from 'react-native-actions-sheet';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { AddSongSetListCard } from '../cards/AddSongSetListCard';
 import Button from '../common/button';
 import Input from '../common/Input';
 import Title from '../common/title';
@@ -19,6 +21,9 @@ function SetlistSheet() {
     const insets = useSafeAreaInsets();
     const handleUpdateDetails = () => {
         setStep('updateDetails');
+    }
+    const handleAddSong = () => {
+        setStep('addSong');
     }
     const router = useRouter()
     const currentSetList = currentSetListStore(s => s.currentSetList)
@@ -79,7 +84,7 @@ function SetlistSheet() {
         }
         
         return(
-            <View>
+            <View style={styles.sheet}>
                 <Input
                     input={localSetListName}
                     setInput={setLocalSetListName} 
@@ -96,6 +101,29 @@ function SetlistSheet() {
                     disabled={disabled}
                     >
                     <Title fs={20} b>Update</Title>
+                </Button>
+            </View>
+        )
+    }
+
+    function AddSongs() {
+        const allSongs = useSongStore(s => s.songs) || []
+        return (
+            <View style={styles.sheet}>
+                <View style={styles.addHeader}>
+                    <Title fw={100} m={5}>Songs</Title>
+                </View>
+                {/* {allSongs.length > 0 && 
+                allSongs.map((song: Song) => {
+                    return (
+                    <AddSongSetListCard key={song.id} song={song} />
+                )})} */}
+                <FlatList
+                    data={allSongs}
+                    renderItem={({ item }) => <AddSongSetListCard song={item} />}
+                    />
+                <Button>
+                    Add to Set List
                 </Button>
             </View>
         )
@@ -120,7 +148,7 @@ function SetlistSheet() {
                             Update Details
                         </Button>
                         <Button 
-                            onPress={() => {}} 
+                            onPress={handleAddSong} 
                             c={secondary}
                             icon={<Feather name="plus" size={20} color={textColor} />}
                             >
@@ -143,6 +171,17 @@ function SetlistSheet() {
                         exiting={exiting}
                         >
                         <UpdateDetails />
+                    </Animated.View>
+                );
+            case 'addSong':
+                return (
+                    <Animated.View 
+                        entering={entering} 
+                        key={step}
+                        exiting={exiting}
+                        style={styles.sheet}
+                        >
+                        <AddSongs />
                     </Animated.View>
                 );
             default:
@@ -171,11 +210,19 @@ const styles = StyleSheet.create({
     paddingTop: 5,
   },
   sheet: {
-    height: 'auto',
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'column',
+    flexDirection: 'column'
+  },
+  addHeader: {
+    width: '90%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: border,
+    marginBottom: 10,
   },
   indicatorStyle: {
     width: 75,
