@@ -1,7 +1,7 @@
-import { bgLight, borderMuted, danger, secondary, textColor } from '@/constants/colors';
-import { currentSetListStore } from '@/context/SetListStore';
-import { deleteSetListAndSongs } from '@/utils/queries';
-import { Feather } from '@expo/vector-icons';
+import { bgLight, borderMuted, danger, primary, secondary, textColor } from '@/constants/colors';
+import { currentSetListStore, useSetListStore } from '@/context/SetListStore';
+import { deleteSetListAndSongs, refetchSetList, updateSetListDetails } from '@/utils/queries';
+import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
@@ -54,6 +54,53 @@ function SetlistSheet() {
         );
     }
 
+    function UpdateDetails() {
+        const [ localSetListName, setLocalSetListName ] = useState(currentSetList?.name || '')
+        const disabled = localSetListName.trim() === ''
+        const setLists = useSetListStore(s => s.setLists)
+        const updateSetLists = useSetListStore(s => s.addSetLists)
+        const setCurrentSetList = currentSetListStore(s => s.setCurrentSetList)
+
+        const update = async () => {
+            try {
+                if (!currentSetList) return;
+                await updateSetListDetails(currentSetList.id, localSetListName.trim());
+                const newSetList = await refetchSetList(currentSetList.id);
+                if (!newSetList) return;
+                const updatedSetLists = setLists.map(sl =>
+                    sl.id === currentSetList.id ? newSetList : sl
+                );
+                setCurrentSetList(newSetList);
+                updateSetLists(updatedSetLists);
+                actionSheetRef.current?.hide()
+            } catch (e) {
+                console.log("Failed to update set list details", e);
+            }
+        }
+        
+        return(
+            <View>
+                <Input
+                    input={localSetListName}
+                    setInput={setLocalSetListName} 
+                    w={'90%'}
+                    m={5}
+                    icon={<Ionicons name="musical-notes" size={20} color={textColor} />}
+                    autoFocus
+                    />
+                <Button 
+                    onPress={update}
+                    h={50}
+                    r={100}
+                    c={disabled ? borderMuted : primary}
+                    disabled={disabled}
+                    >
+                    <Title fs={20} b>Update</Title>
+                </Button>
+            </View>
+        )
+    }
+
     const Renderer = useCallback(() => {
         const entering = FadeIn
         const exiting  = FadeOut
@@ -66,8 +113,19 @@ function SetlistSheet() {
                         exiting={exiting}
                         style={styles.sheet}
                         >
-                        <Button onPress={handleUpdateDetails}>Update Details</Button>
-                        <Button onPress={() => {}} c={secondary}>Add Song</Button>
+                        <Button 
+                            onPress={handleUpdateDetails}
+                            icon={<MaterialIcons name="update" size={20} color={textColor} />}
+                            >
+                            Update Details
+                        </Button>
+                        <Button 
+                            onPress={() => {}} 
+                            c={secondary}
+                            icon={<Feather name="plus" size={20} color={textColor} />}
+                            >
+                            Add Song
+                        </Button>
                         <Button 
                             onPress={handleDelete} 
                             c={danger}
@@ -83,22 +141,8 @@ function SetlistSheet() {
                         entering={entering} 
                         key={step}
                         exiting={exiting}
-                        style={styles.sheet}
                         >
-                        <Input
-                            input="" 
-                            setInput={() => {}} 
-                            w={'90%'}
-                            m={5}
-                            autoFocus
-                            />
-                        <Button 
-                            onPress={() => {}}
-                            h={50}
-                            r={100}
-                            >
-                            <Title fs={20} b>Update</Title>
-                        </Button>
+                        <UpdateDetails />
                     </Animated.View>
                 );
             default:

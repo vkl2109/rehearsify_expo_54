@@ -1,6 +1,6 @@
 import { SetList, Song, SongToSetList, User } from "@/constants/types";
 import { db } from "@/firebase";
-import { collection, doc, getDoc, getDocs, query, runTransaction, Timestamp, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, runTransaction, Timestamp, updateDoc, where } from "firebase/firestore";
 
 
 async function fetchSetListsForBand(bandId: string): Promise<SetList[]> {
@@ -129,5 +129,50 @@ async function deleteSetListAndSongs(setListId: string): Promise<void> {
     }
 }
 
-export { deleteSetListAndSongs, fetchSetListsForBand, fetchSongsForBand, fetchSongsToSetListsForBand, getUser };
+async function refetchSetList(setListId: string): Promise<SetList | null> {
+    try {
+        const setListRef = doc(db, "setlists", setListId);
+        const setListSnap = await getDoc(setListRef);
+        if (setListSnap.exists()) {
+            const data = setListSnap.data();
+            const serializedSetList: SetList = {
+                id: setListSnap.id,
+                name: data?.name ?? "",
+                bandId: data?.bandId ?? "",
+                createdAt: data?.createdAt ?? Timestamp.now(),
+                createdBy: data?.createdBy ?? "",
+            }
+            return serializedSetList;
+        } else {
+            console.log("No such set list!");
+            return null;
+        }
+    } catch (e) {
+        console.warn("Failed to refetch set list", e);
+        throw e
+    }
+}
+
+async function updateSetListDetails(setListId: string, newName: string): Promise<void> {
+    try {
+        const setListRef = doc(db, "setlists", setListId);
+        await updateDoc(setListRef, {
+            name: newName
+        });
+        console.log("Set list details updated successfully!");
+    } catch (e) {
+        console.log("Failed to update set list details", e);
+        throw e;
+    }
+}
+
+export {
+    deleteSetListAndSongs,
+    fetchSetListsForBand,
+    fetchSongsForBand,
+    fetchSongsToSetListsForBand,
+    getUser,
+    refetchSetList,
+    updateSetListDetails
+};
 

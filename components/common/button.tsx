@@ -1,4 +1,5 @@
 import { primary } from '@/constants/colors';
+import { IconProps } from '@expo/vector-icons/build/createIconSet';
 import { AnimatableNumericValue, DimensionValue, StyleSheet, TextStyle, TouchableOpacity, View } from 'react-native';
 import Title from './title';
 
@@ -12,7 +13,7 @@ interface ButtonProps extends React.ComponentProps<typeof TouchableOpacity> {
     flex?: number;
     c?: string;
     fs?: TextStyle["fontSize"];
-    icon?: React.ReactNode;
+    icon?: React.ReactElement<IconProps<any>>;
 }
 
 export default function Button({
@@ -42,7 +43,7 @@ export default function Button({
         }} onPress={onPress}>
             {icon ? icon : <View />}
             <Title fs={fs} b >{children}</Title>
-            <View />
+            <View style={{ width: icon ? (icon.props.size || 20) : 0}}/>
         </TouchableOpacity>
     )
 }
