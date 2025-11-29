@@ -1,18 +1,29 @@
 import { border } from "@/constants/colors";
 import { Song } from "@/constants/types";
+import { useAddSongToSetlistStore } from "@/context/AddSongToSetlistStore";
 import { Checkbox } from 'expo-checkbox';
-import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import Pill from "../common/pill";
 import Title from "../common/title";
 
 
 export function AddSongSetListCard({ song }: { song: Song}) {
-    const [ isChecked, setChecked ] = useState(false);
+    const isInSet = useAddSongToSetlistStore(s => s.songInSet(song.id));
+    const addSongInSet = useAddSongToSetlistStore(s => s.addSong);
+    const removeSongInSet = useAddSongToSetlistStore(s => s.removeSong);
+
+    const setChecked = (newValue: boolean) => {
+        if (newValue) {
+            addSongInSet(song.id);
+        } else {
+            removeSongInSet(song.id);
+        }
+    }
+
     return (
         <View style={styles.cardWrapper}>
             <View style={styles.group}>
-                <Checkbox style={styles.checkbox} value={isChecked} onValueChange={setChecked} />
+                <Checkbox style={styles.checkbox} value={isInSet} onValueChange={setChecked} />
                 <Pill
                     fs={14}
                     c={border}

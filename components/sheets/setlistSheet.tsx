@@ -1,6 +1,7 @@
 import { bgLight, border, borderMuted, danger, primary, secondary, textColor } from '@/constants/colors';
 import { currentSetListStore, useSetListStore } from '@/context/SetListStore';
 import { useSongStore } from '@/context/SongStore';
+import { useSongToSetListStore } from '@/context/SongToSetListStore';
 import { deleteSetListAndSongs, refetchSetList, updateSetListDetails } from '@/utils/queries';
 import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -61,7 +62,7 @@ function SetlistSheet() {
 
     function UpdateDetails() {
         const [ localSetListName, setLocalSetListName ] = useState(currentSetList?.name || '')
-        const disabled = localSetListName.trim() === ''
+        const disabled = localSetListName.trim() === '' || localSetListName.trim() === currentSetList?.name;
         const setLists = useSetListStore(s => s.setLists)
         const updateSetLists = useSetListStore(s => s.addSetLists)
         const setCurrentSetList = currentSetListStore(s => s.setCurrentSetList)
@@ -108,21 +109,25 @@ function SetlistSheet() {
 
     function AddSongs() {
         const allSongs = useSongStore(s => s.songs) || []
+        const songsToSetLists = useSongToSetListStore(s => s.songsToSetLists) || []
+        const filteredSongJoins = songsToSetLists.filter(stsl => stsl.setlistId === currentSetList?.id)
+        const filteredSongIds = filteredSongJoins.map(stsl => stsl.songId)
+        const notPresentSongs = allSongs.filter(s => !filteredSongIds.includes(s.id))
+
+        const handleAddSongsToSetList = () => {
+            
+        }
+
         return (
             <View style={styles.sheet}>
                 <View style={styles.addHeader}>
                     <Title fw={100} m={5}>Songs</Title>
                 </View>
-                {/* {allSongs.length > 0 && 
-                allSongs.map((song: Song) => {
-                    return (
-                    <AddSongSetListCard key={song.id} song={song} />
-                )})} */}
                 <FlatList
-                    data={allSongs}
+                    data={notPresentSongs}
                     renderItem={({ item }) => <AddSongSetListCard song={item} />}
                     />
-                <Button>
+                <Button onPress={handleAddSongsToSetList}>
                     Add to Set List
                 </Button>
             </View>

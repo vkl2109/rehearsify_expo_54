@@ -1,4 +1,5 @@
-import { bgLight, borderMuted, secondary } from '@/constants/colors';
+import { bgLight, borderMuted, secondary, textColor } from '@/constants/colors';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
@@ -21,8 +22,19 @@ function AddSheet() {
             gestureEnabled
             >
             <View style={styles.sheet}>
-                <Button onPress={handleNewSong}>New Song</Button>
-                <Button onPress={() => {}} c={secondary}>New Set List</Button>
+                <Button 
+                  onPress={handleNewSong}
+                  icon={<Ionicons name="musical-notes" size={20} color={textColor} />}
+                  >
+                  New Song
+                </Button>
+                <Button 
+                  onPress={() => {}} 
+                  c={secondary}
+                  icon={<Ionicons name="list" size={20} color={textColor} />}
+                  >
+                  New Set List
+                </Button>
             </View>
         </ActionSheet>
     );

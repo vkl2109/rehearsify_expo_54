@@ -21,14 +21,17 @@ export default function SongCard({
 
     const [expanded, setExpanded] = useState(false);
     const height = useSharedValue(0);
+    const opacity = useSharedValue(0);
 
     const toggleExpand = () => {
         setExpanded(!expanded);
         height.value = withTiming(expanded ? 0 : 50, { duration: 300 });
+        opacity.value = withTiming(expanded ? 0 : 1, { duration: 600 });
     }
 
     const animatedStyle = useAnimatedStyle(() => ({
-        height: height.value
+        height: height.value,
+        opacity: opacity.value
     }));
 
     const serializedSongType = song?.type ?? "Original"
@@ -58,25 +61,27 @@ export default function SongCard({
                 </View>
             </View>
             <Animated.View style={[styles.collapsibleContent, animatedStyle]}>
-                <View style={styles.topRow}>
-                    <Pill
-                        text={songTime}
-                        fs={15}
-                        c={'none'}
-                        icon={<AntDesign name="clock-circle" size={16} color={textColor} />}
-                        />
-                    <Pill
-                        text={song?.key.join(' | ') ?? "C Major"}
-                        fs={15}
-                        c={'none'}
-                        icon={<Ionicons name="musical-notes" size={16} color={textColor} />}
-                        />
-                    <Pill
-                        text={`${song?.bpm ?? 120} BPM`}
-                        fs={15}
-                        c={'none'}
-                        icon={<FontAwesome name="heartbeat" size={16} color={textColor} />}
-                        />
+                <View style={{ width: "100%" }}>
+                    <View style={styles.topRow}>
+                        <Pill
+                            text={songTime}
+                            fs={15}
+                            c={'none'}
+                            icon={<AntDesign name="clock-circle" size={16} color={textColor} />}
+                            />
+                        <Pill
+                            text={song?.key.join(' | ') ?? "C Major"}
+                            fs={15}
+                            c={'none'}
+                            icon={<Ionicons name="musical-notes" size={16} color={textColor} />}
+                            />
+                        <Pill
+                            text={`${song?.bpm ?? 120} BPM`}
+                            fs={15}
+                            c={'none'}
+                            icon={<FontAwesome name="heartbeat" size={16} color={textColor} />}
+                            />
+                    </View>
                 </View>
             </Animated.View>
         </View>
