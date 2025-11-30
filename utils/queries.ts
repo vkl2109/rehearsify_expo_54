@@ -166,11 +166,61 @@ async function updateSetListDetails(setListId: string, newName: string): Promise
     }
 }
 
+async function addSongsToCurrentSetlist(
+    newSongIds: string[], 
+    currentSetlistId: string, 
+    currentBandId: string,
+    currentSongCount: number
+) {
+    try {
+        await runTransaction(db, async (transaction) => {
+            newSongIds.map((newSongId: string, index: number) => {
+                const newSongToSetlistId: string = `${newSongId}_${currentSetlistId}`
+                const newSongToSetlistRef = doc(db, 'songsToSetLists', newSongToSetlistId)
+                const newSongToSetlist: SongToSetList = {
+                    bandId: currentBandId,
+                    setlistId: currentSetlistId,
+                    songId: newSongId,
+                    order: currentSongCount + index + 1
+                }
+                transaction.set(newSongToSetlistRef, newSongToSetlist)
+            })
+        })
+    } catch (e) {
+        console.log("Failed to add songs to set list", e)
+        throw e
+    }
+}
+
+async function fetchSongsToSetLists(setListId: string): Promise<SongToSetList[]> {
+    try {
+        const songsToSetListsQuery = query(
+            collection(db, "songsToSetLists"),
+            where("setlistId", "==", setListId)
+        );
+        const songsToSetListsSnaps = await getDocs(songsToSetListsQuery);
+        const songsToSetLists: SongToSetList[] = []
+        songsToSetListsSnaps.forEach(doc => {
+          const data = doc.data()
+          const serializedSongToSetList: SongToSetList = {
+              songId: data?.songId ?? "",
+              setlistId: data?.setlistId ?? "",
+              order: data?.order ?? 0,
+              bandId: data?.bandId ?? "",
+          }
+          songsToSetLists.push(serializedSongToSetList)
+        })
+        return songsToSetLists;
+    } catch (e) {
+        console.warn("Failed to fetch songs to setlists", e);
+        return [];
+    }
+}
+
 export {
-    deleteSetListAndSongs,
+    addSongsToCurrentSetlist, deleteSetListAndSongs,
     fetchSetListsForBand,
-    fetchSongsForBand,
-    fetchSongsToSetListsForBand,
+    fetchSongsForBand, fetchSongsToSetLists, fetchSongsToSetListsForBand,
     getUser,
     refetchSetList,
     updateSetListDetails

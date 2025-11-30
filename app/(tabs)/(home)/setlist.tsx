@@ -39,6 +39,11 @@ export default function SetListView() {
         SheetManager.show('SetlistSheet')
     }
     
+    const sortedSongs = filteredSongs.sort((a, b) => {
+        const orderA = songToJoinMap.get(a.id)?.order || 0;
+        const orderB = songToJoinMap.get(b.id)?.order || 0;
+        return orderA - orderB;
+    });
 
     return (
         <Screen>
@@ -52,8 +57,8 @@ export default function SetListView() {
                         <Entypo name="dots-three-horizontal" size={24} color={highlight} />
                     </TouchableOpacity>
                 </View>
-                {filteredSongs.length > 0 && <FlashList
-                    data={filteredSongs || []}
+                {sortedSongs.length > 0 && <FlashList
+                    data={sortedSongs || []}
                     renderItem={({ item }) => <SongCard song={item} songJoin={songToJoinMap.get(item.id)}/>}
                     style={styles.allSongs}
                     />}

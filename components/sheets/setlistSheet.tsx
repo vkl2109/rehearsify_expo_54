@@ -1,8 +1,10 @@
 import { bgLight, border, borderMuted, danger, primary, secondary, textColor } from '@/constants/colors';
+import { useAddSongToSetlistStore } from '@/context/AddSongToSetlistStore';
+import { useAuthStore } from '@/context/AuthStore';
 import { currentSetListStore, useSetListStore } from '@/context/SetListStore';
 import { useSongStore } from '@/context/SongStore';
 import { useSongToSetListStore } from '@/context/SongToSetListStore';
-import { deleteSetListAndSongs, refetchSetList, updateSetListDetails } from '@/utils/queries';
+import { addSongsToCurrentSetlist, deleteSetListAndSongs, fetchSongsToSetLists, refetchSetList, updateSetListDetails } from '@/utils/queries';
 import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -28,6 +30,8 @@ function SetlistSheet() {
     }
     const router = useRouter()
     const currentSetList = currentSetListStore(s => s.currentSetList)
+    const currentSetListId = currentSetList?.id
+    const currentBandId = useAuthStore(s => s.user?.currentBandId)
 
     useEffect(() => {
         setStep('menu');
@@ -113,9 +117,29 @@ function SetlistSheet() {
         const filteredSongJoins = songsToSetLists.filter(stsl => stsl.setlistId === currentSetList?.id)
         const filteredSongIds = filteredSongJoins.map(stsl => stsl.songId)
         const notPresentSongs = allSongs.filter(s => !filteredSongIds.includes(s.id))
+        const selectedSongIds = useAddSongToSetlistStore(s => s.songsToAdd)
+        const updateSongsToSetlists = useSongToSetListStore(s => s.addSongsToSetLists)
 
-        const handleAddSongsToSetList = () => {
-            
+        const handleAddSongsToSetList = async () => {
+            try {
+                const newSongIds: string[] = Array.from(selectedSongIds)
+                if (!currentSetListId) return;
+                if (!currentBandId) return;
+                const currentSongCount = filteredSongJoins.length
+                await addSongsToCurrentSetlist(
+                    newSongIds,
+                    currentSetListId,
+                    currentBandId,
+                    currentSongCount
+                )
+                const updatedSongJoins = await fetchSongsToSetLists(currentSetListId)
+                const oldFilteredJoins = songsToSetLists.filter(stsl => stsl.setlistId != currentSetListId)
+                const newJoined = [...oldFilteredJoins, ...updatedSongJoins]
+                updateSongsToSetlists(newJoined)
+                actionSheetRef.current?.hide()
+            } catch (e) {
+                console.log(e)
+            }
         }
 
         return (
