@@ -6,10 +6,12 @@ import { SongToSetList } from "@/constants/types";
 import { currentSetListStore } from "@/context/SetListStore";
 import { useSongStore } from "@/context/SongStore";
 import { useSongToSetListStore } from "@/context/SongToSetListStore";
+import { fetchSongsToSetLists } from "@/utils/queries";
 import Entypo from '@expo/vector-icons/Entypo';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FlashList } from "@shopify/flash-list";
 import { useRouter } from "expo-router";
+import { useEffect } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { SheetManager } from "react-native-actions-sheet";
 
@@ -17,10 +19,12 @@ import { SheetManager } from "react-native-actions-sheet";
 export default function SetListView() {
     const router = useRouter()
     const currentSetList = currentSetListStore(s => s.currentSetList)
+    const currentSetListId = currentSetList?.id
 
     if (!currentSetList) return <Screen />
 
     const songsToSetLists = useSongToSetListStore(s => s.songsToSetLists) || []
+    const updateSongsToSetlists = useSongToSetListStore(s => s.updateSongsToSetLists)
     const filteredSongJoins = songsToSetLists.filter(stsl => stsl.setlistId === currentSetList?.id)
     const filteredSongIds = filteredSongJoins.map(stsl => stsl.songId)
     const songs = useSongStore(s => s.songs) || []
@@ -44,6 +48,16 @@ export default function SetListView() {
         const orderB = songToJoinMap.get(b.id)?.order || 0;
         return orderA - orderB;
     });
+
+    useEffect(() => {
+        if (!currentSetListId) return;
+        const fetchLatestJoins = async () => {
+            console.log("Fetching latest joins for setlist:", currentSetListId);
+            const latestJoins = await fetchSongsToSetLists(currentSetListId);
+            updateSongsToSetlists(latestJoins);
+        }
+        fetchLatestJoins().catch(console.error);
+    }, [currentSetListId]);
 
     return (
         <Screen>

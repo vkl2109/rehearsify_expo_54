@@ -1,12 +1,16 @@
-import { bg, bgLight, border, borderMuted, highlight, textColor } from "@/constants/colors";
+import { bg, bgLight, border, borderMuted, danger, highlight, success, textColor } from "@/constants/colors";
 import { Song, SongToSetList } from "@/constants/types";
+import { currentSetListStore } from "@/context/SetListStore";
+import { useSongToSetListStore } from "@/context/SongToSetListStore";
+import { fetchSongsToSetLists, removeSongFromSetList } from "@/utils/queries";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Button from "../common/button";
 import Pill from "../common/pill";
 import Title from "../common/title";
 
@@ -22,10 +26,16 @@ export default function SongCard({
     const [expanded, setExpanded] = useState(false);
     const height = useSharedValue(0);
     const opacity = useSharedValue(0);
+    const currentSetListId = currentSetListStore(s => s.currentSetList?.id)
+    const currentSetListName = currentSetListStore(s => s.currentSetList?.name)
+
+    const songsToSetLists = useSongToSetListStore(s => s.songsToSetLists) || []
+    const updateSongsToSetlists = useSongToSetListStore(s => s.updateSongsToSetLists)
+    const filteredSongJoins = songsToSetLists.filter((stsl: SongToSetList) => stsl.setlistId === currentSetListId)
 
     const toggleExpand = () => {
         setExpanded(!expanded);
-        height.value = withTiming(expanded ? 0 : 50, { duration: 300 });
+        height.value = withTiming(expanded ? 0 : 75, { duration: 300 });
         opacity.value = withTiming(expanded ? 0 : 1, { duration: 600 });
     }
 
@@ -34,8 +44,48 @@ export default function SongCard({
         opacity: opacity.value
     }));
 
-    const serializedSongType = song?.type ?? "Original"
     const songTime = song?.minutes && song?.seconds ? `${song.minutes}:${song.seconds < 10 ? '0' + song.seconds : song.seconds}` : "0:00"
+
+    const handleRemoveFromSetList = () => {
+        Alert.alert(
+            `Remove ${song.title} from ${currentSetListName}?`,
+            "This action cannot be undone.",
+            [
+                { 
+                    text: "Cancel", 
+                    style: "cancel" 
+                },
+                {
+                    text: "Delete",
+                    style: "destructive",
+                    onPress: async () => {
+                        if (!songJoin) return;
+                        try {
+                            if (!currentSetListId) return;
+                            await removeSongFromSetList(
+                                filteredSongJoins,
+                                songJoin
+                            )
+                            const updatedJoins = songsToSetLists.filter(
+                                j => `${j.songId}_${j.setlistId}` !== `${songJoin.songId}_${songJoin.setlistId}`
+                            )
+                            const latestJoins = await fetchSongsToSetLists(currentSetListId)
+                            const newState = [
+                                ...updatedJoins.filter(j => j.setlistId !== currentSetListId),
+                                ...latestJoins
+                            ]
+                            updateSongsToSetlists(newState);
+                        } catch (error) {
+                            console.error("Error removing song from set list:", error);
+                            alert("Failed to remove song from set list. Please try again.");
+                        }
+                    },
+                },
+            ]
+        )
+    }
+
+    const handleEditSong = () => {}
 
     return(
         <View style={styles.cardWrapper}>
@@ -62,7 +112,7 @@ export default function SongCard({
             </View>
             <Animated.View style={[styles.collapsibleContent, animatedStyle]}>
                 <View style={{ width: "100%" }}>
-                    <View style={styles.topRow}>
+                    <View style={styles.row}>
                         <Pill
                             text={songTime}
                             fs={15}
@@ -81,6 +131,36 @@ export default function SongCard({
                             c={'none'}
                             icon={<FontAwesome name="heartbeat" size={16} color={textColor} />}
                             />
+                    </View>
+                    <View style={styles.row}>
+                        {songJoin ? 
+                        <Button
+                            onPress={handleRemoveFromSetList}
+                            m={0}
+                            p={7.5}
+                            w={110}
+                            c={bgLight}
+                            fs={14}
+                            h={35}
+                            icon={<AntDesign name="delete" size={16} color={danger} />}
+                            noRightSpace
+                            >
+                            Remove
+                        </Button>
+                        : <View />}
+                        <Button
+                            onPress={handleEditSong}
+                            m={0}
+                            p={5}
+                            w={70}
+                            c={bgLight}
+                            fs={14}
+                            h={35}
+                            icon={<AntDesign name="edit" size={16} color={success} />}
+                            noRightSpace
+                            >
+                            Edit
+                        </Button>
                     </View>
                 </View>
             </Animated.View>
@@ -133,11 +213,11 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
     },
-    topRow: {
+    row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         width: '100%',
-        padding: 10,
+        padding: 2.5
     }
 });

@@ -167,29 +167,44 @@ async function updateSetListDetails(setListId: string, newName: string): Promise
 }
 
 async function addSongsToCurrentSetlist(
-    newSongIds: string[], 
-    currentSetlistId: string, 
-    currentBandId: string,
-    currentSongCount: number
+  newSongIds: string[],
+  currentSetlistId: string,
+  currentBandId: string
 ) {
-    try {
-        await runTransaction(db, async (transaction) => {
-            newSongIds.map((newSongId: string, index: number) => {
-                const newSongToSetlistId: string = `${newSongId}_${currentSetlistId}`
-                const newSongToSetlistRef = doc(db, 'songsToSetLists', newSongToSetlistId)
-                const newSongToSetlist: SongToSetList = {
-                    bandId: currentBandId,
-                    setlistId: currentSetlistId,
-                    songId: newSongId,
-                    order: currentSongCount + index + 1
-                }
-                transaction.set(newSongToSetlistRef, newSongToSetlist)
-            })
-        })
-    } catch (e) {
-        console.log("Failed to add songs to set list", e)
-        throw e
-    }
+  if (!newSongIds.length) return;
+
+  try {
+    await runTransaction(db, async (transaction) => {
+      const songsToSetListsRef = collection(db, "songsToSetLists");
+
+      // 1. Fetch current joins for this setlist
+      const q = query(songsToSetListsRef, where("setlistId", "==", currentSetlistId));
+      const existingSnap = await getDocs(q);
+
+      // 2. Compute the next order
+      let maxOrder = 0;
+      existingSnap.forEach((docSnap) => {
+        const data = docSnap.data() as SongToSetList;
+        if (data.order && data.order > maxOrder) maxOrder = data.order;
+      });
+
+      // 3. Add new songs with sequential order
+      newSongIds.forEach((songId, idx) => {
+        const newId = `${songId}_${currentSetlistId}`;
+        const newRef = doc(db, "songsToSetLists", newId);
+        const newJoin: SongToSetList = {
+          bandId: currentBandId,
+          setlistId: currentSetlistId,
+          songId,
+          order: maxOrder + idx + 1,
+        };
+        transaction.set(newRef, newJoin);
+      });
+    });
+  } catch (e) {
+    console.error("Failed to add songs to set list:", e);
+    throw e;
+  }
 }
 
 async function fetchSongsToSetLists(setListId: string): Promise<SongToSetList[]> {
@@ -217,12 +232,88 @@ async function fetchSongsToSetLists(setListId: string): Promise<SongToSetList[]>
     }
 }
 
+async function removeSongFromSetList(
+    songsToSetListJoins: SongToSetList[],
+    songToRemove: SongToSetList
+) {
+    try {
+        const songId = songToRemove?.songId;
+        const setListId = songToRemove?.setlistId;
+
+        if (!songId || !setListId) {
+            throw new Error("Invalid song to remove!");
+        }
+
+        const removeId = `${songId}_${setListId}`;
+
+        await runTransaction(db, async (transaction) => {
+            // 1. READ all required documents up front
+            const refsToRead = [];
+
+            // join to delete
+            const removeRef = doc(db, "songsToSetLists", removeId);
+            refsToRead.push(removeRef);
+
+            // all joins in this setlist
+            const joinRefs = songsToSetListJoins.map((j) =>
+                doc(db, "songsToSetLists", `${j.songId}_${j.setlistId}`)
+            );
+            refsToRead.push(...joinRefs);
+
+            // Read all in parallel (inside transaction)
+            const snaps = await Promise.all(
+                refsToRead.map((r) => transaction.get(r))
+            );
+
+            // 2. Ensure the join-to-delete exists
+            if (!snaps[0].exists()) {
+                throw new Error(`Join does not exist: ${removeId}`);
+            }
+
+            // 3. Reconstruct the actual existing joins
+            const existingJoins: SongToSetList[] = [];
+
+            for (let i = 1; i < snaps.length; i++) {
+                const snap = snaps[i];
+                if (snap.exists()) {
+                    existingJoins.push(snap.data() as SongToSetList);
+                }
+            }
+
+            // 4. Filter out the removed join
+            const remaining = existingJoins.filter((join) => {
+                const id = `${join.songId}_${join.setlistId}`;
+                return id !== removeId;
+            });
+
+            // 5. Sort remaining by order
+            const ordered = remaining.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+            // --- NOW PERFORM WRITES ---
+
+            // 6. Delete the join
+            transaction.delete(removeRef);
+
+            // 7. Rewrite order for remaining
+            ordered.forEach((j, index) => {
+                const id = `${j.songId}_${j.setlistId}`;
+                const ref = doc(db, "songsToSetLists", id);
+
+                transaction.update(ref, {
+                    order: index + 1,
+                });
+            });
+        });
+    } catch (e) {
+        throw new Error("removeSongFromSetList failed: " + e);
+    }
+}
+
 export {
     addSongsToCurrentSetlist, deleteSetListAndSongs,
     fetchSetListsForBand,
     fetchSongsForBand, fetchSongsToSetLists, fetchSongsToSetListsForBand,
     getUser,
-    refetchSetList,
-    updateSetListDetails
+    refetchSetList, removeSongFromSetList, updateSetListDetails
 };
 

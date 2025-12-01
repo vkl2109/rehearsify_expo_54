@@ -163,6 +163,7 @@ function Step3() {
     const currentBandId = useAuthStore(s => s.user?.currentBandId)
     const addSongs = useSongStore(s => s.addSongs)
     const backStep = useAddSongStore(s => s.backStep)
+    const clearStore = useAddSongStore(s => s.clearStore)
     const newSong = {
         title: useAddSongStore(s => s.title),
         artist: useAddSongStore(s => s.artist),
@@ -187,6 +188,7 @@ function Step3() {
             await addDoc(collection(db, "songs"), newSong)
             const newSongs = await fetchSongsForBand(currentBandId)
             addSongs(newSongs)
+            clearStore()
             router.back()
         } catch (error) {
             console.error("Error adding song:", error);

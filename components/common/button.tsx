@@ -14,6 +14,7 @@ interface ButtonProps extends React.ComponentProps<typeof TouchableOpacity> {
     c?: string;
     fs?: TextStyle["fontSize"];
     icon?: React.ReactElement<IconProps<any>>;
+    noRightSpace?: boolean;
 }
 
 export default function Button({
@@ -24,6 +25,7 @@ export default function Button({
     p = 10,
     c = primary,
     fs = 16,
+    noRightSpace = false,
     icon,
     onPress,
     children,
@@ -43,7 +45,7 @@ export default function Button({
         }} onPress={onPress}>
             {icon ? icon : <View />}
             <Title fs={fs} b >{children}</Title>
-            <View style={{ width: icon ? (icon.props.size || 20) : 0}}/>
+            {!noRightSpace && <View style={{ width: (icon) ? (icon.props.size || 20) : 0}}/>}
         </TouchableOpacity>
     )
 }

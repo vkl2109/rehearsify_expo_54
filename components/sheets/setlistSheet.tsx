@@ -118,25 +118,22 @@ function SetlistSheet() {
         const filteredSongIds = filteredSongJoins.map(stsl => stsl.songId)
         const notPresentSongs = allSongs.filter(s => !filteredSongIds.includes(s.id))
         const selectedSongIds = useAddSongToSetlistStore(s => s.songsToAdd)
-        const updateSongsToSetlists = useSongToSetListStore(s => s.addSongsToSetLists)
+        const updateSongsToSetlists = useSongToSetListStore(s => s.updateSongsToSetLists)
 
         const handleAddSongsToSetList = async () => {
             try {
-                const newSongIds: string[] = Array.from(selectedSongIds)
-                if (!currentSetListId) return;
-                if (!currentBandId) return;
-                const currentSongCount = filteredSongJoins.length
-                await addSongsToCurrentSetlist(
-                    newSongIds,
-                    currentSetListId,
-                    currentBandId,
-                    currentSongCount
-                )
-                const updatedSongJoins = await fetchSongsToSetLists(currentSetListId)
-                const oldFilteredJoins = songsToSetLists.filter(stsl => stsl.setlistId != currentSetListId)
-                const newJoined = [...oldFilteredJoins, ...updatedSongJoins]
-                updateSongsToSetlists(newJoined)
-                actionSheetRef.current?.hide()
+                if (!currentSetListId || !currentBandId) return;
+
+                const newSongIds = Array.from(selectedSongIds);
+                if (!newSongIds.length) return;
+
+                await addSongsToCurrentSetlist(newSongIds, currentSetListId, currentBandId);
+
+                const newJoins = await fetchSongsToSetLists(currentSetListId);
+
+                updateSongsToSetlists(newJoins);
+
+                actionSheetRef.current?.hide();
             } catch (e) {
                 console.log(e)
             }
