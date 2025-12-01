@@ -41,14 +41,14 @@ export default function Root() {
   const songs = useSongStore(s => s.songs)
   const addSongs = useSongStore(s => s.addSongs)
   const songsToSetLists = useSongToSetListStore(s => s.songsToSetLists)
-  const updateSongsToSetLists = useSongToSetListStore(s => s.updateSongsToSetLists)
+  const replaceSongsToSetLists = useSongToSetListStore(s => s.replaceSongsToSetLists)
 
   useEffect(() => {
     const bandId = user?.currentBandId;
     if (!bandId) return;
     if (setLists.length === 0) fetchSetListsForBand(bandId).then(addSetLists).catch(console.error)
     if (songs.length === 0) fetchSongsForBand(bandId).then(addSongs).catch(console.error)
-    if (songsToSetLists.length === 0) fetchSongsToSetListsForBand(bandId).then(updateSongsToSetLists).catch(console.error)
+    if (songsToSetLists.length === 0) fetchSongsToSetListsForBand(bandId).then(replaceSongsToSetLists).catch(console.error)
   },[user])
 
   const filteredSetlists = search != '' 

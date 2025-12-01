@@ -54,7 +54,7 @@ export default function SetListView() {
         const fetchLatestJoins = async () => {
             console.log("Fetching latest joins for setlist:", currentSetListId);
             const latestJoins = await fetchSongsToSetLists(currentSetListId);
-            updateSongsToSetlists(latestJoins);
+            updateSongsToSetlists(latestJoins, currentSetListId);
         }
         fetchLatestJoins().catch(console.error);
     }, [currentSetListId]);

@@ -4,7 +4,7 @@ import { create } from 'zustand';
 interface SongToSetListStoreState {
     songsToSetLists: SongToSetList[];
     replaceSongsToSetLists: (newData: SongToSetList[]) => void;
-    updateSongsToSetLists: (newData: SongToSetList[]) => void;
+    updateSongsToSetLists: (newData: SongToSetList[], currentSetListId: string) => void;
     clearAllSongsToSetLists: () => void;
 }
 
@@ -13,19 +13,16 @@ const useSongToSetListStore = create<SongToSetListStoreState>()((set, get) => ({
     replaceSongsToSetLists: (newData: SongToSetList[]) => set({
         songsToSetLists: newData
     }),
-    updateSongsToSetLists: (newData: SongToSetList[]) => {
+    updateSongsToSetLists: (newData: SongToSetList[], currentSetListId: string) => {
         const current = get().songsToSetLists;
+        const filteredCurrent = current.filter(j => j.setlistId !== currentSetListId);
 
-        // Create a map keyed by songId_setlistId to deduplicate
+        // Create map for deduplication
         const map = new Map<string, SongToSetList>();
-        
-        // Add current songs first
-        current.forEach(j => map.set(`${j.songId}_${j.setlistId}`, j));
-
-        // Add/overwrite with new songs
+        filteredCurrent.forEach(j => map.set(`${j.songId}_${j.setlistId}`, j));
         newData.forEach(j => map.set(`${j.songId}_${j.setlistId}`, j));
 
-        // Update store with merged unique array
+        // Update store
         set({ songsToSetLists: Array.from(map.values()) });
     },
 

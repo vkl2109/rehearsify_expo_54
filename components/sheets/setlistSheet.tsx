@@ -32,9 +32,11 @@ function SetlistSheet() {
     const currentSetList = currentSetListStore(s => s.currentSetList)
     const currentSetListId = currentSetList?.id
     const currentBandId = useAuthStore(s => s.user?.currentBandId)
+    const clearSongs = useAddSongToSetlistStore(s => s.clearSongs)
 
     useEffect(() => {
         setStep('menu');
+        clearSongs()
     }, []);
 
     function handleDelete() {
@@ -119,6 +121,7 @@ function SetlistSheet() {
         const notPresentSongs = allSongs.filter(s => !filteredSongIds.includes(s.id))
         const selectedSongIds = useAddSongToSetlistStore(s => s.songsToAdd)
         const updateSongsToSetlists = useSongToSetListStore(s => s.updateSongsToSetLists)
+        const disabled = selectedSongIds.size === 0
 
         const handleAddSongsToSetList = async () => {
             try {
@@ -131,7 +134,7 @@ function SetlistSheet() {
 
                 const newJoins = await fetchSongsToSetLists(currentSetListId);
 
-                updateSongsToSetlists(newJoins);
+                updateSongsToSetlists(newJoins, currentSetListId);
 
                 actionSheetRef.current?.hide();
             } catch (e) {
@@ -148,7 +151,13 @@ function SetlistSheet() {
                     data={notPresentSongs}
                     renderItem={({ item }) => <AddSongSetListCard song={item} />}
                     />
-                <Button onPress={handleAddSongsToSetList}>
+                <Button 
+                    onPress={handleAddSongsToSetList}
+                    disabled={disabled}
+                    c={disabled ? borderMuted : primary}
+                    style={{ marginVertical: 10 }}
+                    icon={<Feather name="plus" size={20} color={textColor} />}
+                    >
                     Add to Set List
                 </Button>
             </View>

@@ -66,15 +66,8 @@ export default function SongCard({
                                 filteredSongJoins,
                                 songJoin
                             )
-                            const updatedJoins = songsToSetLists.filter(
-                                j => `${j.songId}_${j.setlistId}` !== `${songJoin.songId}_${songJoin.setlistId}`
-                            )
                             const latestJoins = await fetchSongsToSetLists(currentSetListId)
-                            const newState = [
-                                ...updatedJoins.filter(j => j.setlistId !== currentSetListId),
-                                ...latestJoins
-                            ]
-                            updateSongsToSetlists(newState);
+                            updateSongsToSetlists(latestJoins, currentSetListId);
                         } catch (error) {
                             console.error("Error removing song from set list:", error);
                             alert("Failed to remove song from set list. Please try again.");
