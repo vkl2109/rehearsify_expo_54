@@ -6,6 +6,8 @@ interface SongToSetListStoreState {
     replaceSongsToSetLists: (newData: SongToSetList[]) => void;
     updateSongsToSetLists: (newData: SongToSetList[], currentSetListId: string) => void;
     clearAllSongsToSetLists: () => void;
+    currentOpenSongId: string;
+    setCurrentOpenSongId: (songId: string) => void;
 }
 
 const useSongToSetListStore = create<SongToSetListStoreState>()((set, get) => ({
@@ -27,6 +29,8 @@ const useSongToSetListStore = create<SongToSetListStoreState>()((set, get) => ({
     },
 
     clearAllSongsToSetLists: () => set({ songsToSetLists: [] }),
+    currentOpenSongId: '',
+    setCurrentOpenSongId: (songId: string) => set({ currentOpenSongId: songId })
 }));
 
 export { useSongToSetListStore };

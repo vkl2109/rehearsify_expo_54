@@ -7,7 +7,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useState } from "react";
+import { useEffect } from "react";
 import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import Button from "../common/button";
@@ -23,7 +23,9 @@ export default function SongCard({
 }) {
     if (!song) return <View/>
 
-    const [expanded, setExpanded] = useState(false);
+    const currentOpenSongId = useSongToSetListStore(s => s.currentOpenSongId)
+    const expanded = currentOpenSongId === song.id
+    const setOpenSongId = useSongToSetListStore(s => s.setCurrentOpenSongId)
     const height = useSharedValue(0);
     const opacity = useSharedValue(0);
     const currentSetListId = currentSetListStore(s => s.currentSetList?.id)
@@ -34,10 +36,19 @@ export default function SongCard({
     const filteredSongJoins = songsToSetLists.filter((stsl: SongToSetList) => stsl.setlistId === currentSetListId)
 
     const toggleExpand = () => {
-        setExpanded(!expanded);
-        height.value = withTiming(expanded ? 0 : 75, { duration: 300 });
-        opacity.value = withTiming(expanded ? 0 : 1, { duration: 600 });
+        if (expanded) {
+            // Close if already open
+            setOpenSongId('');
+        } else {
+            // Open this one, closing all others implicitly
+            setOpenSongId(song.id);
+        }
     }
+
+    useEffect(() => {
+        height.value = withTiming(expanded ? 75 : 0, { duration: 300 });
+        opacity.value = withTiming(expanded ? 1 : 0, { duration: 600 });
+    }, [expanded]);
 
     const animatedStyle = useAnimatedStyle(() => ({
         height: height.value,
@@ -68,6 +79,7 @@ export default function SongCard({
                             )
                             const latestJoins = await fetchSongsToSetLists(currentSetListId)
                             updateSongsToSetlists(latestJoins, currentSetListId);
+                            setOpenSongId('')
                         } catch (error) {
                             console.error("Error removing song from set list:", error);
                             alert("Failed to remove song from set list. Please try again.");
