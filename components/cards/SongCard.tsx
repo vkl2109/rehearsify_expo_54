@@ -9,17 +9,19 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useEffect } from "react";
 import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { SlideInLeft, SlideOutRight, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import Button from "../common/button";
 import Pill from "../common/pill";
 import Title from "../common/title";
 
 export default function SongCard({
     song,
-    songJoin
+    songJoin,
+    index
 }:{
     song: Song,
-    songJoin?: SongToSetList
+    songJoin?: SongToSetList,
+    index: number
 }) {
     if (!song) return <View/>
 
@@ -93,7 +95,11 @@ export default function SongCard({
     const handleEditSong = () => {}
 
     return(
-        <View style={styles.cardWrapper}>
+        <Animated.View 
+            style={styles.cardWrapper}
+            entering={SlideInLeft.duration(300)}
+            exiting={SlideOutRight.duration(250)}
+            >
             <View style={styles.card}>
                 {songJoin ? <View style={styles.cardImg}>
                     <Title fs={20}>{songJoin?.order ?? 1}</Title>
@@ -169,7 +175,7 @@ export default function SongCard({
                     </View>
                 </View>
             </Animated.View>
-        </View>
+        </Animated.View>
     )
 }
 

@@ -73,7 +73,13 @@ export default function SetListView() {
                 </View>
                 {sortedSongs.length > 0 && <FlashList
                     data={sortedSongs || []}
-                    renderItem={({ item }) => <SongCard song={item} songJoin={songToJoinMap.get(item.id)}/>}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item, index }) => 
+                        <SongCard song={item} 
+                            songJoin={songToJoinMap.get(item.id)}
+                            index={index}
+                            />
+                    }
                     style={styles.allSongs}
                     />}
             </View>

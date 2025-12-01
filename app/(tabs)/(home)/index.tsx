@@ -87,12 +87,12 @@ export default function Root() {
       </View>
       <FlashList
         data={setlistsAndSongs || []}
-        renderItem={({ item }) => {
+        renderItem={({ item, index }) => {
           switch (item.type) {
             case 'setlist':
               return <SetListCard setList={item}/>
             case 'song':
-              return <SongCard song={item}/>
+              return <SongCard song={item} index={index - filteredSetlists.length}/>
             case 'header':
               return <Title m={10}>{item.title}</Title>
             case 'empty':
