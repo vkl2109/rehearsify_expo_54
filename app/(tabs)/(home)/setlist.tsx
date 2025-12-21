@@ -28,6 +28,7 @@ export default function SetListView() {
     const filteredSongJoins = songsToSetLists.filter(stsl => stsl.setlistId === currentSetList?.id)
     const filteredSongIds = filteredSongJoins.map(stsl => stsl.songId)
     const songs = useSongStore(s => s.songs) || []
+    const setOpenSongId = useSongToSetListStore(s => s.setCurrentOpenSongId)
 
     const filteredSongs = filteredSongIds ? songs.filter(s => filteredSongIds.includes(s.id)) : []
 
@@ -35,6 +36,7 @@ export default function SetListView() {
 
     const handleBack = () => {
         router.back()
+        setOpenSongId('');
     }
 
     if (!currentSetList) return <Screen />
@@ -57,6 +59,7 @@ export default function SetListView() {
             updateSongsToSetlists(latestJoins, currentSetListId);
         }
         fetchLatestJoins().catch(console.error);
+        setOpenSongId('');
     }, [currentSetListId]);
 
     return (

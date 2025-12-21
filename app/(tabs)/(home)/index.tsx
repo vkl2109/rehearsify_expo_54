@@ -42,6 +42,7 @@ export default function Root() {
   const addSongs = useSongStore(s => s.addSongs)
   const songsToSetLists = useSongToSetListStore(s => s.songsToSetLists)
   const replaceSongsToSetLists = useSongToSetListStore(s => s.replaceSongsToSetLists)
+  const setOpenSongId = useSongToSetListStore(s => s.setCurrentOpenSongId)
 
   useEffect(() => {
     const bandId = user?.currentBandId;
@@ -50,6 +51,10 @@ export default function Root() {
     if (songs.length === 0) fetchSongsForBand(bandId).then(addSongs).catch(console.error)
     if (songsToSetLists.length === 0) fetchSongsToSetListsForBand(bandId).then(replaceSongsToSetLists).catch(console.error)
   },[user])
+
+  useEffect(() => {
+    setOpenSongId('');
+  },[])
 
   const filteredSetlists = search != '' 
   ? setLists.filter(sl => sl?.name?.toLowerCase().includes(search.toLowerCase()))
