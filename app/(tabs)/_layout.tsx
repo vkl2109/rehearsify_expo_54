@@ -19,6 +19,7 @@ export default function Layout() {
         <TabTrigger name="home" href="/" asChild style={{flex: 1}}>
           <TabButton
             icon={<Entypo name="home" size={24} color={textColor} />}
+            side={'left'}
             />
         </TabTrigger>
         <View />
@@ -31,6 +32,7 @@ export default function Layout() {
         <TabTrigger name="profile" href="/profile" asChild style={{flex: 1}}>
           <TabButton
             icon={<FontAwesome name="user-circle" size={24} color={textColor} />}
+            side={'right'} 
             />
         </TabTrigger>
       </View>
@@ -64,10 +66,6 @@ const styles = StyleSheet.create({
   width: 65,
   justifyContent: 'center',
   alignItems: 'center',
-  shadowColor: textColor,
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.25,
-  shadowRadius: 3.84,
   elevation: 5,
   zIndex: 1000,
 }

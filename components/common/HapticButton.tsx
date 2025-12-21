@@ -2,9 +2,9 @@ import * as Haptics from "expo-haptics";
 import React from "react";
 import { Pressable, StyleProp, ViewStyle } from "react-native";
 import Animated, {
-    useAnimatedStyle,
-    useSharedValue,
-    withTiming,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
 } from "react-native-reanimated";
 
 const SCALE_IN = 1.05;
@@ -34,6 +34,7 @@ export default function HapticScaleButton({ children, style, onPress }: Props) {
           scale.value = withTiming(1, { duration: DURATION });
         }}
         onPress={onPress}
+        style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}
       >
         {children}
       </Pressable>
