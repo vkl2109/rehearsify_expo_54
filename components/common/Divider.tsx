@@ -4,7 +4,7 @@ import { DimensionValue, StyleSheet, View, ViewProps } from "react-native";
 import Title from "./title";
 
 interface DividerProps extends ViewProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   w?: DimensionValue;
 }
 
@@ -12,12 +12,12 @@ export default function Divider({ w = "100%", children, style, ...props }: Divid
   return (
     <View
       {...props}
-      style={[styles.container, { width: w }, style]}
+      style={[styles.container, { width: w, gap: 0 }, style]}
     >
       <View style={styles.bar} />
-      <Title fw={100} fs={18} c={textMuted}>
+      {children && <Title fw={100} fs={18} c={textMuted}>
         {children}
-      </Title>
+      </Title>}
       <View style={styles.bar} />
     </View>
   );

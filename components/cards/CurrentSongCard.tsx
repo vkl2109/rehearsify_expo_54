@@ -1,4 +1,4 @@
-import { bgLight, danger, success, textColor } from "@/constants/colors";
+import { bg, bgLight, borderMuted, danger, success, textColor } from "@/constants/colors";
 import { Song, SongToSetList } from "@/constants/types";
 import { currentSetListStore } from "@/context/SetListStore";
 import { useSongToSetListStore } from "@/context/SongToSetListStore";
@@ -6,6 +6,7 @@ import { fetchSongsToSetLists, removeSongFromSetList } from "@/utils/queries";
 import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { Alert, StyleSheet, View } from "react-native";
 import Button from "../common/button";
+import Divider from "../common/Divider";
 import Pill from "../common/pill";
 import Title from "../common/title";
 
@@ -64,57 +65,62 @@ function CurrentSongCard({
 
     return (
         <View style={styles.cardWrapper}>
-            <Title>{currentSong ? currentSong.title : "No Current Song"}</Title>
-            <View style={{ width: "100%" }}>
-                <View style={styles.row}>
-                    <Pill
-                        text={songTime}
-                        fs={15}
-                        c={'none'}
-                        icon={<AntDesign name="clock-circle" size={16} color={textColor} />}
-                        />
-                    <Pill
-                        text={currentSong?.key.join(' | ') ?? "C Major"}
-                        fs={15}
-                        c={'none'}
-                        icon={<Ionicons name="musical-notes" size={16} color={textColor} />}
-                        />
-                    <Pill
-                        text={`${currentSong?.bpm ?? 120} BPM`}
-                        fs={15}
-                        c={'none'}
-                        icon={<FontAwesome name="heartbeat" size={16} color={textColor} />}
-                        />
-                </View>
-                <View style={styles.row}>
-                    {currentSongJoin ? 
-                    <Button
-                        onPress={handleRemoveFromSetList}
-                        m={0}
-                        p={7.5}
-                        w={110}
-                        c={bgLight}
-                        fs={14}
-                        h={35}
-                        icon={<AntDesign name="delete" size={16} color={danger} />}
-                        noRightSpace
-                        >
-                        Remove
-                    </Button>
-                    : <View />}
-                    <Button
-                        onPress={() => {}}
-                        m={0}
-                        p={5}
-                        w={70}
-                        c={bgLight}
-                        fs={14}
-                        h={35}
-                        icon={<AntDesign name="edit" size={16} color={success} />}
-                        noRightSpace
-                        >
-                        Edit
-                    </Button>
+            <View style={styles.card}>
+                <Title fs={30}>{currentSong ? currentSong.title : "No Current Song"}</Title>
+                <Divider />
+                <View style={{ width: "100%" }}>
+                    <View style={styles.row}>
+                        <Pill
+                            text={songTime}
+                            fs={15}
+                            c={'none'}
+                            icon={<AntDesign name="clock-circle" size={16} color={textColor} />}
+                            />
+                        <Pill
+                            text={currentSong?.key.join(' | ') ?? "C Major"}
+                            fs={15}
+                            c={'none'}
+                            icon={<Ionicons name="musical-notes" size={16} color={textColor} />}
+                            />
+                        <Pill
+                            text={`${currentSong?.bpm ?? 120} BPM`}
+                            fs={15}
+                            c={'none'}
+                            icon={<FontAwesome name="heartbeat" size={16} color={textColor} />}
+                            />
+                    </View>
+                    <View style={styles.row}>
+                        {currentSongJoin ? 
+                        <Button
+                            onPress={handleRemoveFromSetList}
+                            m={0}
+                            p={7.5}
+                            w={'49%'}
+                            c={bgLight}
+                            fs={16}
+                            r={5}
+                            h={40}
+                            icon={<AntDesign name="delete" size={20} color={danger} />}
+                            noRightSpace
+                            >
+                            Remove
+                        </Button>
+                        : <View />}
+                        <Button
+                            onPress={() => {}}
+                            m={0}
+                            p={7.5}
+                            w={'49%'}
+                            r={5}
+                            c={bgLight}
+                            fs={16}
+                            h={40}
+                            icon={<AntDesign name="edit" size={20} color={success} />}
+                            noRightSpace
+                            >
+                            Edit
+                        </Button>
+                    </View>
                 </View>
             </View>
         </View>
@@ -127,6 +133,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
+    },
+    card: {
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: bg,
+        borderWidth: 1,
+        borderColor: borderMuted,
+        padding: 10,
+        borderRadius: 5
     },
     row: {
         flexDirection: 'row',

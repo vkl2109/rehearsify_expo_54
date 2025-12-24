@@ -3,16 +3,20 @@ import { TabButton } from '@/components/common/TabButton';
 import { primary, textColor } from '@/constants/colors';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { usePathname } from 'expo-router';
 import { TabList, Tabs, TabSlot, TabTrigger } from 'expo-router/ui';
 import { StyleSheet, View } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 
 // Defining the layout of the custom tab navigator
 export default function Layout() {
+  const pathname = usePathname();
+  const shouldHideTabs = pathname === '/setlist';
 
   return (
     <Tabs>
       <TabSlot />
+      {!shouldHideTabs && (
       <View style={{...styles.tabList, 
         backgroundColor: "transparent"
         }}>
@@ -36,6 +40,7 @@ export default function Layout() {
             />
         </TabTrigger>
       </View>
+      )}
       <TabList style={{display: 'none'}}>
         <TabTrigger name="home" href="/">
           <Entypo name="home" size={24} color="black" />
