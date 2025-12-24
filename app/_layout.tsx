@@ -2,6 +2,7 @@ import { bgDark } from '@/constants/colors';
 import { useAuthStore } from '@/context/AuthStore';
 import { useBandStore } from '@/context/BandStore';
 import { auth, db } from '@/firebase';
+import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold, useFonts } from '@expo-google-fonts/inter';
 import { SplashScreen, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -16,6 +17,13 @@ import '../components/sheets/sheets.tsx';
 SplashScreen.preventAutoHideAsync();
 
 export default function Root() {
+  const [fontsLoaded] = useFonts({
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
+  });
+
   const logInUser = useAuthStore(s => s.logInUser);
   const logOutUser = useAuthStore(s => s.logOutUser);
   const updateUser = useAuthStore(s => s.updateUser);
@@ -70,11 +78,13 @@ export default function Root() {
         logOutUser();
       }
       setLoading(false)
-      await SplashScreen.hideAsync()
+      if (fontsLoaded) {
+        await SplashScreen.hideAsync()
+      }
     });
 
     return () => unsub();
-  }, []);
+  }, [fontsLoaded]);
 
   return (
     <SafeAreaProvider>
@@ -82,8 +92,8 @@ export default function Root() {
         <SheetProvider>
           <StatusBar style="light" />
 
-          {/* Only render the app AFTER loading is done */}
-          {!loading && <RootNavigator />}
+          {/* Only render the app AFTER loading is done and fonts are loaded */}
+          {!loading && fontsLoaded && <RootNavigator />}
         </SheetProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>

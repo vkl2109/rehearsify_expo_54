@@ -18,6 +18,7 @@ async function fetchSetListsForBand(bandId: string): Promise<SetList[]> {
               bandId: data?.bandId ?? "",
               createdAt: data?.createdAt ?? Timestamp.now(),
               createdBy: data?.createdBy ?? "",
+              author: data?.author ?? "",
           }
           currentBandSetLists.push(serializedSetList)
         })
@@ -141,6 +142,7 @@ async function refetchSetList(setListId: string): Promise<SetList | null> {
                 bandId: data?.bandId ?? "",
                 createdAt: data?.createdAt ?? Timestamp.now(),
                 createdBy: data?.createdBy ?? "",
+                author: data?.author ?? "",
             }
             return serializedSetList;
         } else {

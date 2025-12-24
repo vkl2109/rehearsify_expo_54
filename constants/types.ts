@@ -6,7 +6,8 @@ interface SetList {
     id: string,
     createdAt: Timestamp,
     createdBy: string,
-    bandId: string
+    bandId: string,
+    author: string
 }
 
 interface Song {

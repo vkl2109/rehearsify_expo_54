@@ -1,4 +1,5 @@
 import { textColor } from "@/constants/colors";
+import { fontFamily } from "@/constants/fonts";
 import { DimensionValue, Text, TextProps, TextStyle } from "react-native";
 
 
@@ -36,6 +37,7 @@ export default function Title({
             fontSize: fs,
             margin: m,
             padding: p,
+            fontFamily: b ? fontFamily.bold : fontFamily.regular,
             fontWeight: b ? "bold" : (fw ?? "normal")
             }, 
             style

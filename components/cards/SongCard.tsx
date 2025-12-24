@@ -21,7 +21,6 @@ export default function SongCard({
     const currentOpenSongId = useSongToSetListStore(s => s.currentOpenSongId)
     const setOpenSongId = useSongToSetListStore(s => s.setCurrentOpenSongId)
     const currentSetListId = currentSetListStore(s => s.currentSetList?.id)
-    const currentSetListName = currentSetListStore(s => s.currentSetList?.name)
     const toggleCurrentSong = () => {
         setOpenSongId(song.id);
     }
