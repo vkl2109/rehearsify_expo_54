@@ -3,13 +3,13 @@ import React, { useEffect, useState } from "react";
 import {
   StyleProp,
   StyleSheet,
-  Text,
   TouchableOpacity,
   useWindowDimensions,
   View,
   ViewStyle,
 } from "react-native";
 import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
+import { Text } from "./StyledText";
 
 export type SegmentItem = {
   index: number;

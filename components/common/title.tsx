@@ -1,6 +1,7 @@
 import { textColor } from "@/constants/colors";
 import { fontFamily } from "@/constants/fonts";
-import { DimensionValue, Text, TextProps, TextStyle } from "react-native";
+import { DimensionValue, TextProps, TextStyle } from "react-native";
+import { Text } from "./StyledText";
 
 
 interface TitleProps extends TextProps {

@@ -5,12 +5,12 @@ import React, { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import {
   DimensionValue,
   StyleSheet,
-  TextInput,
   TextInputProps,
   TextStyle,
   TouchableOpacity,
   View
 } from "react-native";
+import { TextInput } from "./StyledText";
 
 type InputVariant = "text" | "email" | "password" | "search" | "number";
 

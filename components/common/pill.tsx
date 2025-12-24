@@ -1,5 +1,6 @@
 import { info } from "@/constants/colors";
-import { DimensionValue, StyleSheet, Text, View, ViewProps } from "react-native";
+import { DimensionValue, StyleSheet, View, ViewProps } from "react-native";
+import { Text } from "./StyledText";
 
 interface PillProps extends ViewProps {
     h?: DimensionValue
