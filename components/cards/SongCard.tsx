@@ -1,14 +1,9 @@
-import { bg, bgLight, border, borderMuted, danger, success, textColor } from "@/constants/colors";
+import { bg, bgLight, border, borderMuted } from "@/constants/colors";
 import { Song, SongToSetList } from "@/constants/types";
 import { currentSetListStore } from "@/context/SetListStore";
 import { useSongToSetListStore } from "@/context/SongToSetListStore";
-import { fetchSongsToSetLists, removeSongFromSetList } from "@/utils/queries";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
-import Button from "../common/button";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import Animated from 'react-native-reanimated';
 import Pill from "../common/pill";
 import Title from "../common/title";
 
@@ -25,8 +20,6 @@ export default function SongCard({
 
     const currentOpenSongId = useSongToSetListStore(s => s.currentOpenSongId)
     const setOpenSongId = useSongToSetListStore(s => s.setCurrentOpenSongId)
-    const height = useSharedValue(0);
-    const opacity = useSharedValue(0);
     const currentSetListId = currentSetListStore(s => s.currentSetList?.id)
     const currentSetListName = currentSetListStore(s => s.currentSetList?.name)
     const toggleCurrentSong = () => {
@@ -37,56 +30,6 @@ export default function SongCard({
     const updateSongsToSetlists = useSongToSetListStore(s => s.updateSongsToSetLists)
     const filteredSongJoins = songsToSetLists.filter((stsl: SongToSetList) => stsl.setlistId === currentSetListId)
 
-    // const toggleExpand = () => {
-    //     if (expanded) {
-    //         // Close if already open
-    //         setOpenSongId('');
-    //     } else {
-    //         // Open this one, closing all others implicitly
-    //         setOpenSongId(song.id);
-    //     }
-    // }
-
-    const animatedStyle = useAnimatedStyle(() => ({
-        height: height.value,
-        opacity: opacity.value
-    }));
-
-    const songTime = song?.minutes && song?.seconds ? `${song.minutes}:${song.seconds < 10 ? '0' + song.seconds : song.seconds}` : "0:00"
-
-    const handleRemoveFromSetList = () => {
-        Alert.alert(
-            `Remove ${song.title} from ${currentSetListName}?`,
-            "This action cannot be undone.",
-            [
-                { 
-                    text: "Cancel", 
-                    style: "cancel" 
-                },
-                {
-                    text: "Delete",
-                    style: "destructive",
-                    onPress: async () => {
-                        if (!songJoin) return;
-                        try {
-                            if (!currentSetListId) return;
-                            await removeSongFromSetList(
-                                filteredSongJoins,
-                                songJoin
-                            )
-                            const latestJoins = await fetchSongsToSetLists(currentSetListId)
-                            updateSongsToSetlists(latestJoins, currentSetListId);
-                            setOpenSongId('')
-                        } catch (error) {
-                            console.error("Error removing song from set list:", error);
-                            alert("Failed to remove song from set list. Please try again.");
-                        }
-                    },
-                },
-            ]
-        )
-    }
-
     const handleEditSong = () => {}
 
     return(
@@ -95,7 +38,7 @@ export default function SongCard({
             >
             <TouchableOpacity 
                 style={[styles.card, {
-                    borderColor: currentOpenSongId === song?.id ? border : 'transparent',
+                    borderColor: (songJoin && currentOpenSongId === song?.id) ? border : 'transparent',
                 }]}
                 onPress={toggleCurrentSong}>
                 {songJoin ? <View style={styles.cardImg}>
@@ -113,65 +56,8 @@ export default function SongCard({
                         text={song?.artist ?? ""}
                     />
                     <Title fs={18}>{song.title}</Title>
-                    {/* <TouchableOpacity style={styles.downBtn} onPress={toggleExpand}>
-                        <Entypo name={expanded ? "chevron-up" : "chevron-down"} size={24} color={highlight} />
-                    </TouchableOpacity> */}
                 </View>
             </TouchableOpacity>
-            <Animated.View style={[styles.collapsibleContent, animatedStyle]}>
-                <View style={{ width: "100%" }}>
-                    <View style={styles.row}>
-                        <Pill
-                            text={songTime}
-                            fs={15}
-                            c={'none'}
-                            icon={<AntDesign name="clock-circle" size={16} color={textColor} />}
-                            />
-                        <Pill
-                            text={song?.key.join(' | ') ?? "C Major"}
-                            fs={15}
-                            c={'none'}
-                            icon={<Ionicons name="musical-notes" size={16} color={textColor} />}
-                            />
-                        <Pill
-                            text={`${song?.bpm ?? 120} BPM`}
-                            fs={15}
-                            c={'none'}
-                            icon={<FontAwesome name="heartbeat" size={16} color={textColor} />}
-                            />
-                    </View>
-                    <View style={styles.row}>
-                        {songJoin ? 
-                        <Button
-                            onPress={handleRemoveFromSetList}
-                            m={0}
-                            p={7.5}
-                            w={110}
-                            c={bgLight}
-                            fs={14}
-                            h={35}
-                            icon={<AntDesign name="delete" size={16} color={danger} />}
-                            noRightSpace
-                            >
-                            Remove
-                        </Button>
-                        : <View />}
-                        <Button
-                            onPress={handleEditSong}
-                            m={0}
-                            p={5}
-                            w={70}
-                            c={bgLight}
-                            fs={14}
-                            h={35}
-                            icon={<AntDesign name="edit" size={16} color={success} />}
-                            noRightSpace
-                            >
-                            Edit
-                        </Button>
-                    </View>
-                </View>
-            </Animated.View>
         </Animated.View>
     )
 }
