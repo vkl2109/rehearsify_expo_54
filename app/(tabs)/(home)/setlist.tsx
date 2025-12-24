@@ -1,3 +1,4 @@
+import CurrentSongCard from "@/components/cards/CurrentSongCard";
 import SongCard from "@/components/cards/SongCard";
 import Screen from "@/components/common/screen";
 import Title from "@/components/common/title";
@@ -28,6 +29,7 @@ export default function SetListView() {
     const filteredSongJoins = songsToSetLists.filter(stsl => stsl.setlistId === currentSetList?.id)
     const filteredSongIds = filteredSongJoins.map(stsl => stsl.songId)
     const songs = useSongStore(s => s.songs) || []
+    const currentOpenSongId = useSongToSetListStore(s => s.currentOpenSongId)
     const setOpenSongId = useSongToSetListStore(s => s.setCurrentOpenSongId)
 
     const filteredSongs = filteredSongIds ? songs.filter(s => filteredSongIds.includes(s.id)) : []
@@ -50,6 +52,8 @@ export default function SetListView() {
         const orderB = songToJoinMap.get(b.id)?.order || 0;
         return orderA - orderB;
     });
+
+    const currentSong = sortedSongs.find(s => s.id === currentOpenSongId)
 
     useEffect(() => {
         if (!currentSetListId) return;
@@ -74,6 +78,7 @@ export default function SetListView() {
                         <Entypo name="dots-three-horizontal" size={24} color={highlight} />
                     </TouchableOpacity>
                 </View>
+                <CurrentSongCard currentSong={currentSong}/>
                 {sortedSongs.length > 0 && <FlashList
                     data={sortedSongs || []}
                     keyExtractor={(item) => item.id}

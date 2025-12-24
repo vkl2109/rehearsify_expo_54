@@ -1,15 +1,13 @@
-import { bg, bgLight, border, borderMuted, danger, highlight, success, textColor } from "@/constants/colors";
+import { bg, bgLight, border, borderMuted, danger, success, textColor } from "@/constants/colors";
 import { Song, SongToSetList } from "@/constants/types";
 import { currentSetListStore } from "@/context/SetListStore";
 import { useSongToSetListStore } from "@/context/SongToSetListStore";
 import { fetchSongsToSetLists, removeSongFromSetList } from "@/utils/queries";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useEffect } from "react";
 import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
-import Animated, { SlideInLeft, SlideOutRight, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import Button from "../common/button";
 import Pill from "../common/pill";
 import Title from "../common/title";
@@ -26,31 +24,28 @@ export default function SongCard({
     if (!song) return <View/>
 
     const currentOpenSongId = useSongToSetListStore(s => s.currentOpenSongId)
-    const expanded = currentOpenSongId === song.id
     const setOpenSongId = useSongToSetListStore(s => s.setCurrentOpenSongId)
     const height = useSharedValue(0);
     const opacity = useSharedValue(0);
     const currentSetListId = currentSetListStore(s => s.currentSetList?.id)
     const currentSetListName = currentSetListStore(s => s.currentSetList?.name)
+    const toggleCurrentSong = () => {
+        setOpenSongId(song.id);
+    }
 
     const songsToSetLists = useSongToSetListStore(s => s.songsToSetLists) || []
     const updateSongsToSetlists = useSongToSetListStore(s => s.updateSongsToSetLists)
     const filteredSongJoins = songsToSetLists.filter((stsl: SongToSetList) => stsl.setlistId === currentSetListId)
 
-    const toggleExpand = () => {
-        if (expanded) {
-            // Close if already open
-            setOpenSongId('');
-        } else {
-            // Open this one, closing all others implicitly
-            setOpenSongId(song.id);
-        }
-    }
-
-    useEffect(() => {
-        height.value = withTiming(expanded ? 75 : 0, { duration: 300 });
-        opacity.value = withTiming(expanded ? 1 : 0, { duration: 600 });
-    }, [expanded]);
+    // const toggleExpand = () => {
+    //     if (expanded) {
+    //         // Close if already open
+    //         setOpenSongId('');
+    //     } else {
+    //         // Open this one, closing all others implicitly
+    //         setOpenSongId(song.id);
+    //     }
+    // }
 
     const animatedStyle = useAnimatedStyle(() => ({
         height: height.value,
@@ -95,12 +90,14 @@ export default function SongCard({
     const handleEditSong = () => {}
 
     return(
-        <Animated.View 
+        <Animated.View
             style={styles.cardWrapper}
-            entering={SlideInLeft.duration(300)}
-            exiting={SlideOutRight.duration(250)}
             >
-            <View style={styles.card}>
+            <TouchableOpacity 
+                style={[styles.card, {
+                    borderColor: currentOpenSongId === song?.id ? border : 'transparent',
+                }]}
+                onPress={toggleCurrentSong}>
                 {songJoin ? <View style={styles.cardImg}>
                     <Title fs={20}>{songJoin?.order ?? 1}</Title>
                 </View>:
@@ -116,11 +113,11 @@ export default function SongCard({
                         text={song?.artist ?? ""}
                     />
                     <Title fs={18}>{song.title}</Title>
-                    <TouchableOpacity style={styles.downBtn} onPress={toggleExpand}>
+                    {/* <TouchableOpacity style={styles.downBtn} onPress={toggleExpand}>
                         <Entypo name={expanded ? "chevron-up" : "chevron-down"} size={24} color={highlight} />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
-            </View>
+            </TouchableOpacity>
             <Animated.View style={[styles.collapsibleContent, animatedStyle]}>
                 <View style={{ width: "100%" }}>
                     <View style={styles.row}>
@@ -194,7 +191,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: bgLight
+        backgroundColor: bgLight,
+        paddingRight: 10,
+        borderWidth: 1
     },
     cardImg: {
         width: 35,

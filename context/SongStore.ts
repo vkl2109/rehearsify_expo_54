@@ -26,7 +26,7 @@ interface CurrentSongState {
 const currentSongStore = create<CurrentSongState>()((set) => ({
     currentSong: undefined,
     setCurrentSong: (newSong: Song) => set({
-        currentSong: newSong
+        currentSong: { ...newSong }
     }),
     removeCurrentSong: () => set({
         currentSong: undefined
