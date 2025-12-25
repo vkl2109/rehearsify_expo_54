@@ -159,7 +159,7 @@ export default function SongCard({
                                 h={30}
                                 text={song?.artist ?? ""}
                             />
-                            <Title fs={18}>{song.title}</Title>
+                            <Title fs={18}>{song?.title}</Title>
                         </View>
                     </TouchableOpacity>
                 </Animated.View>

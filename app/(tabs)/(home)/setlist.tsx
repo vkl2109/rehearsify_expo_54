@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     iconBtn: {
         padding: 10,
         borderRadius: 100,
-        backgroundColor: bgLight
+        backgroundColor: bgLight,
     },
     header: {
         width: '100%',

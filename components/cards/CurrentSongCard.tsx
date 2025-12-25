@@ -1,4 +1,4 @@
-import { bg, bgLight, borderMuted, danger, success, textColor } from "@/constants/colors";
+import { bg, borderMuted, danger, success, textColor } from "@/constants/colors";
 import { Song, SongToSetList } from "@/constants/types";
 import { currentSetListStore } from "@/context/SetListStore";
 import { useSongToSetListStore } from "@/context/SongToSetListStore";
@@ -7,6 +7,7 @@ import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { Alert, StyleSheet, View } from "react-native";
 import Button from "../common/button";
 import Divider from "../common/Divider";
+import { GlassCard } from "../common/GlassCard";
 import Pill from "../common/pill";
 import Title from "../common/title";
 
@@ -65,7 +66,7 @@ function CurrentSongCard({
 
     return (
         <View style={styles.cardWrapper}>
-            <View style={styles.card}>
+            <GlassCard>
                 <Title fs={30}>{currentSong ? currentSong.title : "No Current Song"}</Title>
                 <Divider />
                 <View style={{ width: "100%" }}>
@@ -96,7 +97,7 @@ function CurrentSongCard({
                             m={0}
                             p={7.5}
                             w={'49%'}
-                            c={bgLight}
+                            c={borderMuted}
                             fs={16}
                             r={30}
                             h={45}
@@ -112,7 +113,7 @@ function CurrentSongCard({
                             p={7.5}
                             w={'49%'}
                             r={30}
-                            c={bgLight}
+                            c={borderMuted}
                             fs={16}
                             h={45}
                             icon={<AntDesign name="edit" size={20} color={success} />}
@@ -122,7 +123,7 @@ function CurrentSongCard({
                         </Button>
                     </View>
                 </View>
-            </View>
+            </GlassCard>
         </View>
     );
 }
