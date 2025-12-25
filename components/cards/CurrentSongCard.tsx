@@ -98,8 +98,8 @@ function CurrentSongCard({
                             w={'49%'}
                             c={bgLight}
                             fs={16}
-                            r={5}
-                            h={40}
+                            r={30}
+                            h={45}
                             icon={<AntDesign name="delete" size={20} color={danger} />}
                             noRightSpace
                             >
@@ -111,10 +111,10 @@ function CurrentSongCard({
                             m={0}
                             p={7.5}
                             w={'49%'}
-                            r={5}
+                            r={30}
                             c={bgLight}
                             fs={16}
-                            h={40}
+                            h={45}
                             icon={<AntDesign name="edit" size={20} color={success} />}
                             noRightSpace
                             >
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: borderMuted,
         padding: 10,
-        borderRadius: 5
+        borderRadius: 20
     },
     row: {
         flexDirection: 'row',
