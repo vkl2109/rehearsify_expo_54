@@ -29,6 +29,7 @@ function AddSongSheet() {
     const disabled = selectedSongIds.size === 0
     const currentSetListId = currentSetList?.id
     const currentBandId = useAuthStore(s => s.user?.currentBandId)
+    const clearSongs = useAddSongToSetlistStore(s => s.clearSongs)
 
     const handleAddSongsToSetList = async () => {
         try {
@@ -42,6 +43,8 @@ function AddSongSheet() {
             const newJoins = await fetchSongsToSetLists(currentSetListId);
 
             updateSongsToSetlists(newJoins, currentSetListId);
+
+            clearSongs()
 
             actionSheetRef.current?.hide();
         } catch (e) {

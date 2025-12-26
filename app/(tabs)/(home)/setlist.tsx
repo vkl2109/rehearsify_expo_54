@@ -4,6 +4,7 @@ import Screen from "@/components/common/screen";
 import Title from "@/components/common/title";
 import { bgLight, highlight, textColor } from "@/constants/colors";
 import { SongToSetList } from "@/constants/types";
+import { useAddSongToSetlistStore } from "@/context/AddSongToSetlistStore";
 import { currentSetListStore } from "@/context/SetListStore";
 import { useSongStore } from "@/context/SongStore";
 import { useSongToSetListStore } from "@/context/SongToSetListStore";
@@ -31,6 +32,7 @@ export default function SetListView() {
     const songs = useSongStore(s => s.songs) || []
     const currentOpenSongId = useSongToSetListStore(s => s.currentOpenSongId)
     const setOpenSongId = useSongToSetListStore(s => s.setCurrentOpenSongId)
+    const clearSongs = useAddSongToSetlistStore(s => s.clearSongs)
 
     const filteredSongs = filteredSongIds ? songs.filter(s => filteredSongIds.includes(s.id)) : []
 
@@ -45,7 +47,7 @@ export default function SetListView() {
 
     function handleDeleteSetList() {
         Alert.alert(
-            "Delete Set List?",
+            `Delete ${currentSetList?.name}?`,
             "This action cannot be undone.",
             [
                 { 
@@ -93,6 +95,7 @@ export default function SetListView() {
     }, [currentSetListId]);
 
     function handleAddSong () {
+        clearSongs()
         SheetManager.show('AddSongSheet')
     }
 
