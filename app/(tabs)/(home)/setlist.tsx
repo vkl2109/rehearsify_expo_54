@@ -2,18 +2,18 @@ import CurrentSongCard from "@/components/cards/CurrentSongCard";
 import SongCard from "@/components/cards/SongCard";
 import Screen from "@/components/common/screen";
 import Title from "@/components/common/title";
-import { bgLight, highlight } from "@/constants/colors";
+import { bgLight, highlight, textColor } from "@/constants/colors";
 import { SongToSetList } from "@/constants/types";
 import { currentSetListStore } from "@/context/SetListStore";
 import { useSongStore } from "@/context/SongStore";
 import { useSongToSetListStore } from "@/context/SongToSetListStore";
-import { fetchSongsToSetLists } from "@/utils/queries";
-import Entypo from '@expo/vector-icons/Entypo';
+import { deleteSetListAndSongs, fetchSongsToSetLists } from "@/utils/queries";
+import { Feather } from "@expo/vector-icons";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FlashList } from "@shopify/flash-list";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
 import { SheetManager } from "react-native-actions-sheet";
 
 
@@ -43,8 +43,30 @@ export default function SetListView() {
 
     if (!currentSetList) return <Screen />
 
-    const handleOpenSheet = () => {
-        SheetManager.show('SetlistSheet')
+    function handleDeleteSetList() {
+        Alert.alert(
+            "Delete Set List?",
+            "This action cannot be undone.",
+            [
+                { 
+                    text: "Cancel", 
+                    style: "cancel" 
+                },
+                {
+                    text: "Delete",
+                    style: "destructive",
+                    onPress: async () => {
+                        try {
+                            if (!currentSetList) return;
+                            await deleteSetListAndSongs(currentSetList.id);
+                            router.back()
+                        } catch (e) {
+                            console.log("Transaction failed: ", e);
+                        }
+                    },
+                },
+            ]
+        );
     }
 
     const handleEditSetList = () => {
@@ -70,6 +92,10 @@ export default function SetListView() {
         setOpenSongId('');
     }, [currentSetListId]);
 
+    function handleAddSong () {
+        SheetManager.show('AddSongSheet')
+    }
+
     return (
         <Screen>
             <View style={styles.content}>
@@ -81,8 +107,8 @@ export default function SetListView() {
                         <Title b>{currentSetList?.name}</Title>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={styles.iconBtn} onPress={handleOpenSheet}>
-                        <Entypo name="dots-three-horizontal" size={24} color={highlight} />
+                    <TouchableOpacity style={styles.iconBtn} onPress={handleDeleteSetList}>
+                        <Feather name="trash-2" size={24} color={highlight} />
                     </TouchableOpacity>
                 </View>
                 <CurrentSongCard currentSong={currentSong}/>
@@ -94,6 +120,15 @@ export default function SetListView() {
                             songJoin={songToJoinMap.get(item.id)}
                             index={index}
                             />
+                    }
+                    ListFooterComponent={
+                    <TouchableOpacity
+                        onPress={handleAddSong}
+                        style={styles.addSongCard}
+                        >
+                        <Feather name="plus" size={16} color={textColor} />
+                        <Title fs={15}>Add Song</Title>
+                    </TouchableOpacity>
                     }
                     style={styles.allSongs}
                     />}
@@ -127,5 +162,17 @@ const styles = StyleSheet.create({
     allSongs: {
         width: '100%',
         height: '100%',
+    },
+    addSongCard: {
+        width: '100%',
+        height: 40,
+        borderRadius: 5,
+        padding: 10,
+        paddingHorizontal: 25,
+        margin: 5,
+        gap: 10,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
     }
 });
