@@ -46,6 +46,10 @@ export default function SetListView() {
     const handleOpenSheet = () => {
         SheetManager.show('SetlistSheet')
     }
+
+    const handleEditSetList = () => {
+        SheetManager.show('EditSetlistSheet')
+    }
     
     const sortedSongs = filteredSongs.sort((a, b) => {
         const orderA = songToJoinMap.get(a.id)?.order || 0;
@@ -73,7 +77,10 @@ export default function SetListView() {
                     <TouchableOpacity onPress={handleBack} style={styles.iconBtn}>
                         <Ionicons name="chevron-back" size={24} color={highlight}/>
                     </TouchableOpacity>
-                    <Title b>{currentSetList?.name}</Title>
+                    <TouchableOpacity onPress={handleEditSetList}>
+                        <Title b>{currentSetList?.name}</Title>
+                    </TouchableOpacity>
+                    
                     <TouchableOpacity style={styles.iconBtn} onPress={handleOpenSheet}>
                         <Entypo name="dots-three-horizontal" size={24} color={highlight} />
                     </TouchableOpacity>

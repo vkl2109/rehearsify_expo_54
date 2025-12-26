@@ -1,6 +1,7 @@
 import { registerSheet, SheetDefinition } from 'react-native-actions-sheet';
 import AddSheet from './addSheet';
 import AuthSheet from './authSheet';
+import EditSetListSheet from './editSetlistSheet';
 import FilterSheet from './filterSheet';
 import SetlistSheet from './setlistSheet';
 
@@ -8,6 +9,7 @@ registerSheet('AddSheet', AddSheet);
 registerSheet('FilterSheet', FilterSheet);
 registerSheet('AuthSheet', AuthSheet);
 registerSheet('SetlistSheet', SetlistSheet);
+registerSheet('EditSetlistSheet', EditSetListSheet);
 
  
 // We extend some of the types here to give us great intellisense
@@ -18,5 +20,6 @@ declare module 'react-native-actions-sheet' {
     'AddSheet': SheetDefinition;
     'AuthSheet': SheetDefinition;
     'SetlistSheet': SheetDefinition;
+    'EditSetlistSheet': SheetDefinition;
   }
 }
