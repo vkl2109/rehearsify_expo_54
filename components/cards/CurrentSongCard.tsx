@@ -6,7 +6,6 @@ import { fetchSongsToSetLists, removeSongFromSetList } from "@/utils/queries";
 import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { Alert, StyleSheet, View } from "react-native";
 import Button from "../common/button";
-import Divider from "../common/Divider";
 import { GlassCard } from "../common/GlassCard";
 import Pill from "../common/pill";
 import Title from "../common/title";
@@ -68,7 +67,7 @@ function CurrentSongCard({
         <View style={styles.cardWrapper}>
             <GlassCard>
                 <Title fs={30}>{currentSong ? currentSong.title : "No Current Song"}</Title>
-                <Divider />
+                {/* <Divider /> */}
                 <View style={{ width: "100%" }}>
                     <View style={styles.row}>
                         <Pill

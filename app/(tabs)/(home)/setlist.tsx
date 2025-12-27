@@ -2,7 +2,7 @@ import CurrentSongCard from "@/components/cards/CurrentSongCard";
 import SongCard from "@/components/cards/SongCard";
 import Screen from "@/components/common/screen";
 import Title from "@/components/common/title";
-import { bgLight, highlight, textColor } from "@/constants/colors";
+import { bgLight, borderMuted, highlight, textColor } from "@/constants/colors";
 import { SongToSetList } from "@/constants/types";
 import { useAddSongToSetlistStore } from "@/context/AddSongToSetlistStore";
 import { currentSetListStore } from "@/context/SetListStore";
@@ -167,15 +167,16 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     addSongCard: {
-        width: '100%',
-        height: 40,
-        borderRadius: 5,
-        padding: 10,
+        width: '95%',
+        height: 35,
+        borderRadius: 20,
         paddingHorizontal: 25,
         margin: 5,
         gap: 10,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: borderMuted,
+        alignSelf: 'center',
     }
 });
