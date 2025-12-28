@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   content: {
-    padding: 20,
+    padding: 10,
     borderRadius: 24,
 
     backgroundColor: "rgba(255,255,255,0.035)",

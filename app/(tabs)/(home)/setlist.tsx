@@ -99,6 +99,35 @@ export default function SetListView() {
         SheetManager.show('AddSongSheet')
     }
 
+    function handleReorderSetList () {
+        SheetManager.show('ReorderSetlistSheet')
+    }
+
+    function HeaderButtons () {
+        return(
+            <View style={styles.headerButtons}>
+                <TouchableOpacity
+                    onPress={handleReorderSetList}
+                    style={[styles.addSongCard, {
+                        backgroundColor: borderMuted
+                    }]}
+                    >
+                    <Ionicons name="reorder-three-sharp" size={16} color={textColor} />
+                    <Title fs={15}>Edit</Title>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={handleAddSong}
+                    style={[styles.addSongCard, {
+                        backgroundColor: borderMuted
+                    }]}
+                    >
+                    <Feather name="plus" size={16} color={textColor} />
+                    <Title fs={15}>Add</Title>
+                </TouchableOpacity>
+            </View>
+        )
+    }
+
     return (
         <Screen>
             <View style={styles.content}>
@@ -124,14 +153,8 @@ export default function SetListView() {
                             index={index}
                             />
                     }
-                    ListFooterComponent={
-                    <TouchableOpacity
-                        onPress={handleAddSong}
-                        style={styles.addSongCard}
-                        >
-                        <Feather name="plus" size={16} color={textColor} />
-                        <Title fs={15}>Add Song</Title>
-                    </TouchableOpacity>
+                    ListHeaderComponent={
+                        <HeaderButtons />
                     }
                     style={styles.allSongs}
                     />}
@@ -167,16 +190,21 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     addSongCard: {
-        width: '95%',
         height: 35,
-        borderRadius: 20,
-        paddingHorizontal: 25,
+        borderRadius: 10,
+        paddingHorizontal: 10,
         margin: 5,
-        gap: 10,
+        gap: 5,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: borderMuted,
         alignSelf: 'center',
+    },
+    headerButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        paddingHorizontal: 5
     }
 });
