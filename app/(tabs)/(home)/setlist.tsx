@@ -2,14 +2,14 @@ import CurrentSongCard from "@/components/cards/CurrentSongCard";
 import SongCard from "@/components/cards/SongCard";
 import Screen from "@/components/common/screen";
 import Title from "@/components/common/title";
-import { bgLight, borderMuted, highlight, textColor } from "@/constants/colors";
+import { borderMuted, textColor, textMuted } from "@/constants/colors";
 import { SongToSetList } from "@/constants/types";
 import { useAddSongToSetlistStore } from "@/context/AddSongToSetlistStore";
 import { currentSetListStore } from "@/context/SetListStore";
 import { useSongStore } from "@/context/SongStore";
 import { useSongToSetListStore } from "@/context/SongToSetListStore";
 import { deleteSetListAndSongs, fetchSongsToSetLists } from "@/utils/queries";
-import { Feather } from "@expo/vector-icons";
+import { AntDesign, Feather } from "@expo/vector-icons";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FlashList } from "@shopify/flash-list";
 import { useRouter } from "expo-router";
@@ -21,13 +21,13 @@ import { SheetManager } from "react-native-actions-sheet";
 export default function SetListView() {
     const router = useRouter()
     const currentSetList = currentSetListStore(s => s.currentSetList)
-    const currentSetListId = currentSetList?.id
+    const currentSetListId = currentSetList?.id ?? ''
 
     if (!currentSetList) return <Screen />
 
     const songsToSetLists = useSongToSetListStore(s => s.songsToSetLists) || []
     const updateSongsToSetlists = useSongToSetListStore(s => s.updateSongsToSetLists)
-    const filteredSongJoins = songsToSetLists.filter(stsl => stsl.setlistId === currentSetList?.id)
+    const filteredSongJoins = songsToSetLists.filter(stsl => stsl.setlistId === currentSetListId)
     const filteredSongIds = filteredSongJoins.map(stsl => stsl.songId)
     const songs = useSongStore(s => s.songs) || []
     const currentOpenSongId = useSongToSetListStore(s => s.currentOpenSongId)
@@ -112,7 +112,7 @@ export default function SetListView() {
                         backgroundColor: borderMuted
                     }]}
                     >
-                    <Ionicons name="reorder-three-sharp" size={16} color={textColor} />
+                    <AntDesign name="menu" size={12} color={textColor} />
                     <Title fs={15}>Edit</Title>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -133,14 +133,14 @@ export default function SetListView() {
             <View style={styles.content}>
                 <View style={styles.header}>
                     <TouchableOpacity onPress={handleBack} style={styles.iconBtn}>
-                        <Ionicons name="chevron-back" size={24} color={highlight}/>
+                        <Ionicons name="chevron-back" size={24} color={textMuted}/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={handleEditSetList}>
                         <Title b>{currentSetList?.name}</Title>
                     </TouchableOpacity>
                     
                     <TouchableOpacity style={styles.iconBtn} onPress={handleDeleteSetList}>
-                        <Feather name="trash-2" size={24} color={highlight} />
+                        <Feather name="trash-2" size={24} color={textMuted} />
                     </TouchableOpacity>
                 </View>
                 <CurrentSongCard currentSong={currentSong}/>
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     iconBtn: {
         padding: 10,
         borderRadius: 100,
-        backgroundColor: bgLight,
+        backgroundColor: borderMuted,
     },
     header: {
         width: '100%',

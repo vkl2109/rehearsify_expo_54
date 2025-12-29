@@ -65,6 +65,7 @@ function AddSongSheet() {
                     <Title fw={100} m={5}>Songs</Title>
                 </View>
                 <FlatList
+                    contentContainerStyle={styles.innerList}
                     data={notPresentSongs}
                     renderItem={({ item }) => <AddSongSetListCard song={item} />}
                     />
@@ -105,6 +106,11 @@ const styles = StyleSheet.create({
   indicatorStyle: {
     width: 75,
     backgroundColor: borderMuted,
+  },
+  innerList: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   }
 });
 
