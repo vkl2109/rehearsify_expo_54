@@ -2,7 +2,7 @@ import { border } from "@/constants/colors";
 import { Song } from "@/constants/types";
 import { useAddSongToSetlistStore } from "@/context/AddSongToSetlistStore";
 import { Checkbox } from 'expo-checkbox';
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import Pill from "../common/pill";
 import Title from "../common/title";
 
@@ -21,7 +21,7 @@ export function AddSongSetListCard({ song }: { song: Song}) {
     }
 
     return (
-        <View style={styles.cardWrapper}>
+        <TouchableOpacity style={styles.cardWrapper} onPress={() => setChecked(!isInSet)}>
             <View style={styles.group}>
                 <Checkbox style={styles.checkbox} value={isInSet} onValueChange={setChecked} />
                 <Pill
@@ -33,7 +33,7 @@ export function AddSongSetListCard({ song }: { song: Song}) {
                 />
             </View>
             <Title>{song?.title ?? "test"}</Title>
-        </View>
+        </TouchableOpacity>
     )
 }
 
