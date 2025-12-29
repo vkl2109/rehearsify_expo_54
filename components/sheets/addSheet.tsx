@@ -1,10 +1,10 @@
-import { bgLight, borderMuted, secondary, textColor } from '@/constants/colors';
+import { bgLight, borderMuted, textColor } from '@/constants/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableHighlight, View } from 'react-native';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Button from '../common/button';
+import Title from '../common/title';
 
 function AddSheet() {
     const insets = useSafeAreaInsets();
@@ -22,19 +22,28 @@ function AddSheet() {
             gestureEnabled
             >
             <View style={styles.sheet}>
-                <Button 
+                <TouchableHighlight
+                  style={styles.addCard}
                   onPress={handleNewSong}
-                  icon={<Ionicons name="musical-notes" size={20} color={textColor} />}
                   >
-                  New Song
-                </Button>
-                <Button 
-                  onPress={() => {}} 
-                  c={secondary}
-                  icon={<Ionicons name="list" size={20} color={textColor} />}
+                  <View style={styles.innerCard}>
+                    <View style={styles.iconWrapper}>
+                      <Ionicons name="musical-notes" size={20} color={textColor} />
+                    </View>
+                    <Title>New Song</Title>
+                  </View>
+                </TouchableHighlight>
+                <TouchableHighlight 
+                  style={styles.addCard}
+                  onPress={() => {}}
                   >
-                  New Set List
-                </Button>
+                  <View style={styles.innerCard}>
+                    <View style={styles.iconWrapper}>
+                      <Ionicons name="list" size={20} color={textColor} />
+                    </View>
+                    <Title>New Set List</Title>
+                  </View>
+                </TouchableHighlight>
             </View>
         </ActionSheet>
     );
@@ -44,6 +53,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: bgLight,
     paddingTop: 5,
+    paddingHorizontal: 5,
   },
   sheet: {
     height: 'auto',
@@ -55,6 +65,29 @@ const styles = StyleSheet.create({
   indicatorStyle: {
     width: 75,
     backgroundColor: borderMuted,
+  },
+  addCard: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 5,
+    borderRadius: 10,
+  },
+  innerCard: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  iconWrapper: {
+    width: 50,
+    height: 50,
+    borderRadius: 100,
+    margin: 10,
+    backgroundColor: borderMuted,
+    justifyContent: 'center',
+    alignItems: 'center',
   }
 });
  

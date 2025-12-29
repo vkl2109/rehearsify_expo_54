@@ -1,4 +1,4 @@
-import { bg, bgLight, border, borderMuted, danger, success, textColor } from "@/constants/colors";
+import { bg, bgLight, border, borderMuted, danger, success, textColor, textMuted } from "@/constants/colors";
 import { Song, SongToSetList } from "@/constants/types";
 import { currentSetListStore } from "@/context/SetListStore";
 import { useSongToSetListStore } from "@/context/SongToSetListStore";
@@ -142,7 +142,7 @@ export default function SongCard({
                     <TouchableOpacity
                         activeOpacity={1}
                         style={[styles.card, {
-                            borderColor: (songJoin && currentOpenSongId === song?.id) ? border : 'transparent',
+                            backgroundColor: (songJoin && currentOpenSongId === song?.id) ? bgLight : bg,
                         }]}
                         onPress={toggleCurrentSong}>
                         {songJoin ? <View style={styles.cardImg}>
@@ -162,6 +162,7 @@ export default function SongCard({
                             <Title fs={18}>{song?.title}</Title>
                         </View>
                     </TouchableOpacity>
+                    <View  style={styles.divider}/>
                 </Animated.View>
             </GestureDetector>
         </View>
@@ -201,17 +202,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 10,
     },
+    divider: {
+        margin: 0,
+        padding: 0,
+        height: 0.25,
+        backgroundColor: textMuted,
+        width: '100%',
+    },
     card: {
         width: '100%',
         height: 50,
-        borderRadius: 5,
-        margin: 5,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: bgLight,
+        backgroundColor: borderMuted,
         paddingRight: 10,
-        borderWidth: 1
     },
     cardImg: {
         width: 35,
