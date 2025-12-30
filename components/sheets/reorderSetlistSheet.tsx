@@ -6,7 +6,8 @@ import { useSongToSetListStore } from "@/context/SongToSetListStore";
 import { Feather } from "@expo/vector-icons";
 import { useRef } from "react";
 import { StyleSheet, View } from "react-native";
-import ActionSheet, { ActionSheetRef, FlatList } from "react-native-actions-sheet";
+import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet";
+import { useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ReorderSongCard } from "../cards/ReorderSongCard";
 import Button from "../common/button";
@@ -31,46 +32,34 @@ function ReorderSetlistSheet() {
 
     const songToJoinMap = new Map<string, SongToSetList>(filteredSongJoins.map(stsl => [stsl.songId, stsl]))
 
-    const positions = new Map<string, number>(filteredSongJoins.map(stsl => [stsl.songId, stsl.order]));
-
+    const positions = useSharedValue<Record<string, number>>(Object.fromEntries(filteredSongJoins.map(stsl => [stsl.songId, stsl.order])));
     
     const sortedSongs = filteredSongs.sort((a, b) => {
         const orderA = songToJoinMap.get(a.id)?.order || 0;
         const orderB = songToJoinMap.get(b.id)?.order || 0;
         return orderA - orderB;
     });
-    
-    const moveItem = (id: string, from: number, to: number) => {
-        const updated = [...sortedSongs]
-        const moved = updated.splice(from, 1)[0]
-        updated.splice(to, 0, moved)
-
-        // update order fields
-        // updated.forEach((item, i) => (item.order = i))
-
-        // onReorder(updated)
-    }
 
     function handleSaveOrder () {
 
     }
+
     return(
         <ActionSheet
             containerStyle={styles.container}
             indicatorStyle={styles.indicatorStyle}
             safeAreaInsets={insets}
-            gestureEnabled
             ref={actionSheetRef}
             >
             <View style={styles.sheet}>
                 <View style={styles.addHeader}>
                     <Title fw={100} m={5}>Order</Title>
                 </View>
-                <FlatList
-                    data={sortedSongs}
-                    renderItem={({ item }) => <ReorderSongCard song={item} positions={positions} moveItem={moveItem} />}
-                    keyExtractor={(item) => item.id}
-                    />
+                <View style={[styles.innerList, { height: sortedSongs.length * 50 }]}>
+                    {sortedSongs.map(song => (
+                        <ReorderSongCard key={song.id} song={song} positions={positions} />
+                    ))}
+                </View>
                 <Button
                     onPress={handleSaveOrder}
                     disabled={disabled}
@@ -88,13 +77,18 @@ function ReorderSetlistSheet() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: bgLight,
-    paddingTop: 5,
+    paddingTop: 10,
   },
   sheet: {
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column'
+  },
+  innerList: {
+    width: '90%',
+    flexDirection: 'column',
+    position: 'relative',
   },
   addHeader: {
     width: '90%',

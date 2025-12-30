@@ -39,8 +39,8 @@ export default function SetListView() {
     const songToJoinMap = new Map<string, SongToSetList>(filteredSongJoins.map(stsl => [stsl.songId, stsl]))
 
     const handleBack = () => {
-        setOpenSongId('')
         router.back()
+        setTimeout(() => setOpenSongId(''), 500);
     }
 
     if (!currentSetList) return <Screen />
